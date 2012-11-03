@@ -13,11 +13,20 @@
     #include <OpenGLES/ES2/gl.h>
     #include <OpenGLES/ES2/glext.h>
     typedef double GLclampd;
+
   #else
     #ifdef __APPLE__
       #include <OpenGL/OpenGL.h>
       #include <OpenGL/gl.h>
       #define glClearDepthf glClearDepth
+      #define glDepthRangef glDepthRange
+
+      void noop(...) {}
+
+      #define glGetShaderPrecisionFormat noop
+      #define glReleaseShaderCompiler noop
+      #define glShaderBinary noop
+
     #else
       #ifdef _WIN32
         #include <windows.h>
