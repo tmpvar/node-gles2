@@ -598,11 +598,11 @@ Handle<Value> GlGenBuffers(const Arguments& args) {
   GLsizei n = args[0]->Int32Value();
 
   Handle<Array> ret = Array::New(n);
-  GLuint* buffers;
+  GLuint* buffers = 0;
 
   glGenBuffers(n, buffers);
 
-  for (int i_1; i_1 < n; i_1++) {
+  for (int i_1=0; i_1 < n; i_1++) {
     ret->Set(Number::New(i_1), Number::New(buffers[i_1]));
   }
   return scope.Close(ret);
@@ -623,11 +623,11 @@ Handle<Value> GlGenFramebuffers(const Arguments& args) {
   GLsizei n = args[0]->Int32Value();
 
   Handle<Array> ret = Array::New(n);
-  GLuint* framebuffers;
+  GLuint* framebuffers = 0;
 
   glGenFramebuffers(n, framebuffers);
 
-  for (int i_1; i_1 < n; i_1++) {
+  for (int i_1=0; i_1 < n; i_1++) {
     ret->Set(Number::New(i_1), Number::New(framebuffers[i_1]));
   }
   return scope.Close(ret);
@@ -639,11 +639,11 @@ Handle<Value> GlGenRenderbuffers(const Arguments& args) {
   GLsizei n = args[0]->Int32Value();
 
   Handle<Array> ret = Array::New(n);
-  GLuint* renderbuffers;
+  GLuint* renderbuffers = 0;
 
   glGenRenderbuffers(n, renderbuffers);
 
-  for (int i_1; i_1 < n; i_1++) {
+  for (int i_1=0; i_1 < n; i_1++) {
     ret->Set(Number::New(i_1), Number::New(renderbuffers[i_1]));
   }
   return scope.Close(ret);
@@ -655,11 +655,11 @@ Handle<Value> GlGenTextures(const Arguments& args) {
   GLsizei n = args[0]->Int32Value();
 
   Handle<Array> ret = Array::New(n);
-  GLuint* textures;
+  GLuint* textures = 0;
 
   glGenTextures(n, textures);
 
-  for (int i_1; i_1 < n; i_1++) {
+  for (int i_1=0; i_1 < n; i_1++) {
     ret->Set(Number::New(i_1), Number::New(textures[i_1]));
   }
   return scope.Close(ret);
@@ -671,9 +671,9 @@ Handle<Value> GlGetActiveAttrib(const Arguments& args) {
   GLuint program = args[0]->Uint32Value();
   GLuint index = args[1]->Uint32Value();
   GLsizei bufsize = args[2]->Int32Value();
-  GLsizei* length;
-  GLint* size;
-  GLenum* type;
+  GLsizei* length = 0;
+  GLint* size = 0;
+  GLenum* type = 0;
   GLchar name[bufsize];
 
   glGetActiveAttrib(program, index, bufsize, length, size, type, name);
@@ -687,9 +687,9 @@ Handle<Value> GlGetActiveUniform(const Arguments& args) {
   GLuint program = args[0]->Uint32Value();
   GLuint index = args[1]->Uint32Value();
   GLsizei bufsize = args[2]->Int32Value();
-  GLsizei* length;
-  GLint* size;
-  GLenum* type;
+  GLsizei* length = 0;
+  GLint* size = 0;
+  GLenum* type = 0;
   GLchar name[bufsize];
 
   glGetActiveUniform(program, index, bufsize, length, size, type, name);
@@ -702,14 +702,14 @@ Handle<Value> GlGetAttachedShaders(const Arguments& args) {
 
   GLuint program = args[0]->Uint32Value();
   GLsizei maxcount = args[1]->Int32Value();
-  GLsizei* count;
+  GLsizei* count = 0;
 
   Handle<Array> ret = Array::New(maxcount);
-  GLuint* shaders;
+  GLuint* shaders = 0;
 
   glGetAttachedShaders(program, maxcount, count, shaders);
 
-  for (int i_3; i_3 < maxcount; i_3++) {
+  for (int i_3=0; i_3 < maxcount; i_3++) {
     ret->Set(Number::New(i_3), Number::New(shaders[i_3]));
   }
   return scope.Close(ret);
@@ -730,7 +730,7 @@ Handle<Value> GlGetBooleanv(const Arguments& args) {
   HandleScope scope;
 
   GLenum pname = args[0]->Int32Value();
-  GLboolean* params;
+  GLboolean* params = 0;
 
   glGetBooleanv(pname, params);
 
@@ -742,7 +742,7 @@ Handle<Value> GlGetBufferParameteriv(const Arguments& args) {
 
   GLenum target = args[0]->Int32Value();
   GLenum pname = args[1]->Int32Value();
-  GLint* params;
+  GLint* params = 0;
 
   glGetBufferParameteriv(target, pname, params);
 
@@ -761,7 +761,7 @@ Handle<Value> GlGetFloatv(const Arguments& args) {
   HandleScope scope;
 
   GLenum pname = args[0]->Int32Value();
-  GLfloat* params;
+  GLfloat* params = 0;
 
   glGetFloatv(pname, params);
 
@@ -774,7 +774,7 @@ Handle<Value> GlGetFramebufferAttachmentParameteriv(const Arguments& args) {
   GLenum target = args[0]->Int32Value();
   GLenum attachment = args[1]->Int32Value();
   GLenum pname = args[2]->Int32Value();
-  GLint* params;
+  GLint* params = 0;
 
   glGetFramebufferAttachmentParameteriv(target, attachment, pname, params);
 
@@ -785,7 +785,7 @@ Handle<Value> GlGetIntegerv(const Arguments& args) {
   HandleScope scope;
 
   GLenum pname = args[0]->Int32Value();
-  GLint* params;
+  GLint* params = 0;
 
   glGetIntegerv(pname, params);
 
@@ -797,7 +797,7 @@ Handle<Value> GlGetProgramiv(const Arguments& args) {
 
   GLuint program = args[0]->Uint32Value();
   GLenum pname = args[1]->Int32Value();
-  GLint* params;
+  GLint* params = 0;
 
   glGetProgramiv(program, pname, params);
 
@@ -809,7 +809,7 @@ Handle<Value> GlGetProgramInfoLog(const Arguments& args) {
 
   GLuint program = args[0]->Uint32Value();
   GLsizei bufsize = args[1]->Int32Value();
-  GLsizei* length;
+  GLsizei* length = 0;
   GLchar infolog[bufsize];
 
   glGetProgramInfoLog(program, bufsize, length, infolog);
@@ -822,7 +822,7 @@ Handle<Value> GlGetRenderbufferParameteriv(const Arguments& args) {
 
   GLenum target = args[0]->Int32Value();
   GLenum pname = args[1]->Int32Value();
-  GLint* params;
+  GLint* params = 0;
 
   glGetRenderbufferParameteriv(target, pname, params);
 
@@ -834,7 +834,7 @@ Handle<Value> GlGetShaderiv(const Arguments& args) {
 
   GLuint shader = args[0]->Uint32Value();
   GLenum pname = args[1]->Int32Value();
-  GLint* params;
+  GLint* params = 0;
 
   glGetShaderiv(shader, pname, params);
 
@@ -846,7 +846,7 @@ Handle<Value> GlGetShaderInfoLog(const Arguments& args) {
 
   GLuint shader = args[0]->Uint32Value();
   GLsizei bufsize = args[1]->Int32Value();
-  GLsizei* length;
+  GLsizei* length = 0;
   GLchar infolog[bufsize];
 
   glGetShaderInfoLog(shader, bufsize, length, infolog);
@@ -859,8 +859,8 @@ Handle<Value> GlGetShaderPrecisionFormat(const Arguments& args) {
 
   GLenum shadertype = args[0]->Int32Value();
   GLenum precisiontype = args[1]->Int32Value();
-  GLint* range;
-  GLint* precision;
+  GLint* range = 0;
+  GLint* precision = 0;
 
   glGetShaderPrecisionFormat(shadertype, precisiontype, range, precision);
 
@@ -872,7 +872,7 @@ Handle<Value> GlGetShaderSource(const Arguments& args) {
 
   GLuint shader = args[0]->Uint32Value();
   GLsizei bufsize = args[1]->Int32Value();
-  GLsizei* length;
+  GLsizei* length = 0;
   GLchar source[bufsize];
 
   glGetShaderSource(shader, bufsize, length, source);
@@ -894,7 +894,7 @@ Handle<Value> GlGetTexParameterfv(const Arguments& args) {
 
   GLenum target = args[0]->Int32Value();
   GLenum pname = args[1]->Int32Value();
-  GLfloat* params;
+  GLfloat* params = 0;
 
   glGetTexParameterfv(target, pname, params);
 
@@ -906,7 +906,7 @@ Handle<Value> GlGetTexParameteriv(const Arguments& args) {
 
   GLenum target = args[0]->Int32Value();
   GLenum pname = args[1]->Int32Value();
-  GLint* params;
+  GLint* params = 0;
 
   glGetTexParameteriv(target, pname, params);
 
@@ -918,7 +918,7 @@ Handle<Value> GlGetUniformfv(const Arguments& args) {
 
   GLuint program = args[0]->Uint32Value();
   GLint location = args[1]->Int32Value();
-  GLfloat* params;
+  GLfloat* params = 0;
 
   glGetUniformfv(program, location, params);
 
@@ -930,7 +930,7 @@ Handle<Value> GlGetUniformiv(const Arguments& args) {
 
   GLuint program = args[0]->Uint32Value();
   GLint location = args[1]->Int32Value();
-  GLint* params;
+  GLint* params = 0;
 
   glGetUniformiv(program, location, params);
 
@@ -953,7 +953,7 @@ Handle<Value> GlGetVertexAttribfv(const Arguments& args) {
 
   GLuint index = args[0]->Uint32Value();
   GLenum pname = args[1]->Int32Value();
-  GLfloat* params;
+  GLfloat* params = 0;
 
   glGetVertexAttribfv(index, pname, params);
 
@@ -965,7 +965,7 @@ Handle<Value> GlGetVertexAttribiv(const Arguments& args) {
 
   GLuint index = args[0]->Uint32Value();
   GLenum pname = args[1]->Int32Value();
-  GLint* params;
+  GLint* params = 0;
 
   glGetVertexAttribiv(index, pname, params);
 
@@ -1099,7 +1099,7 @@ Handle<Value> GlReadPixels(const Arguments& args) {
   GLenum format = args[4]->Int32Value();
   GLenum type = args[5]->Int32Value();
 
-  GLvoid* pixels;
+  GLvoid* pixels = 0;
 
   glReadPixels(x, y, width, height, format, type, pixels);
 

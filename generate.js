@@ -169,10 +169,10 @@ get('http://www.khronos.org/registry/gles/api/2.0/gl2.h', function(err, res, hea
               var arg = this.arguments.maxcount ? 'maxcount' : 'n';
               cc.push('');
               cc.push('  Handle<Array> ret = Array::New(' + arg + ');');
-              cc.push('  ' + type + ' ' + name + ';');
+              cc.push('  ' + type + ' ' + name + ' = 0;');
 
               var out = [''];
-              out.push('  for (int i_' + i + '; i_' + i + ' < ' + arg + '; i_' + i + '++) {');
+              out.push('  for (int i_' + i + '=0; i_' + i + ' < ' + arg + '; i_' + i + '++) {');
               out.push('    ret->Set(Number::New(i_' + i + '), Number::New(' + name + '[i_' + i + ']));');
               out.push('  }');
               out.push('  return scope.Close(ret);');
@@ -187,13 +187,13 @@ get('http://www.khronos.org/registry/gles/api/2.0/gl2.h', function(err, res, hea
           case 'GLfloat*':
           case 'GLsizei*':
           case 'GLenum*':
-            cc.push('  ' + type + ' ' + name + ';');
+            cc.push('  ' + type + ' ' + name + ' = 0;');
             skipReturn = '\n  return scope.Close(Number::New(*' + name + '));';
           break;
 
           case 'GLboolean*':
             if (!this.arguments.length && !this.arguments.count) {
-              cc.push('  ' + type + ' ' + name + ';');
+              cc.push('  ' + type + ' ' + name + ' = 0;');
               skipReturn = '\n  return scope.Close(Boolean::New(*' + name + '));';
             } else {
               X(type, name);
@@ -214,7 +214,7 @@ get('http://www.khronos.org/registry/gles/api/2.0/gl2.h', function(err, res, hea
           case 'GLvoid*':
             if (this.name === 'glReadPixels') {
               cc.push('');
-              cc.push('  ' + type + ' ' + name + ';');
+              cc.push('  ' + type + ' ' + name + ' = 0;');
               // TODO: create Buffer
               var out = [
                 '',
