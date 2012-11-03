@@ -187,14 +187,16 @@ get('http://www.khronos.org/registry/gles/api/2.0/gl2.h', function(err, res, hea
           case 'GLfloat*':
           case 'GLsizei*':
           case 'GLenum*':
-            cc.push('  ' + type + ' ' + name + ' = 0;');
-            skipReturn = '\n  return scope.Close(Number::New(*' + name + '));';
+            cc.push('  ' + type.replace('*', '') + ' ' + name + '_base = 0;');
+            cc.push('  ' + type + ' ' + name + ' = &' + name + '_base;');
+            skipReturn = '\n  return scope.Close(Number::New(' + name + '_base));';
           break;
 
           case 'GLboolean*':
             if (!this.arguments.length && !this.arguments.count) {
-              cc.push('  ' + type + ' ' + name + ' = 0;');
-              skipReturn = '\n  return scope.Close(Boolean::New(*' + name + '));';
+              cc.push('  ' + type.replace('*', '') + ' ' + name + '_base = 0;');
+              cc.push('  ' + type + ' ' + name + ' = &' + name + '_base;');
+              skipReturn = '\n  return scope.Close(Boolean::New(' + name + '_base));';
             } else {
               X(type, name);
             }
