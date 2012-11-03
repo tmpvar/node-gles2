@@ -219,7 +219,7 @@ get('http://www.khronos.org/registry/gles/api/2.0/gl2.h', function(err, res, hea
               var out = [
                 '',
                 '  unsigned long buffer_length = (width - x) * (height - y);',
-                '  int pixelComponents, bytesPerComponent;',
+                '  int pixelComponents=0, bytesPerComponent=0;',
                 '  switch (format) {',
                 '    case GL_ALPHA:',
                 '      pixelComponents = 1;',

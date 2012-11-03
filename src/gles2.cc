@@ -1104,7 +1104,7 @@ Handle<Value> GlReadPixels(const Arguments& args) {
   glReadPixels(x, y, width, height, format, type, pixels);
 
   unsigned long buffer_length = (width - x) * (height - y);
-  int pixelComponents, bytesPerComponent;
+  int pixelComponents=0, bytesPerComponent=0;
   switch (format) {
     case GL_ALPHA:
       pixelComponents = 1;
