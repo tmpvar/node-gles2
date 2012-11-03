@@ -20,11 +20,99 @@ get('http://www.khronos.org/registry/gles/api/2.0/gl2.h', function(err, res, hea
   initPost = [
     '}',
     '',
-    'NODE_MODULE(webgl, init)',
+    'NODE_MODULE(gles2, init)',
   ];
 
 
-  var functionMatches = headerString.match(/GL_APICALL .* GL_APIENTRY gl[^;]+/g);
+  // Methods
+  init.push('');
+  init.push('  // Methods')
+  headerString.match(/GL_APICALL .+ GL_APIENTRY gl[^;]+/g).forEach(function(fn) {
+      var parts = fn.replace(/[\(\),]/g, '').replace(/ *GL_APIENTRY/g, '').replace(/GL_APICALL /g, '').split(' ');
+      var signature = {};
+
+      signature.returnType = parts.shift();
+      if ( signature.returnType === 'const') {
+        console.log('here');
+         signature.returnType += ' ' + parts.shift();
+         console.log(signature.returnType, parts);
+      }
+
+      var fnName = signature.name = parts.shift();
+      var upper = fnName[0].toUpperCase() + fnName.substring(1);
+      signature.arguments = {};
+      signature.list = [];
+
+      cc.push('Handle<Value> ' + upper  + '(const Arguments& args) {');
+      cc.push('  HandleScope scope;');
+      cc.push('');
+
+      init.push('  SetMethod(target, "' + fnName + '", ' + upper + ');');
+
+      cc.push('  return scope.Close(Undefined());');
+      cc.push('}');
+      cc.push('');
+  });
+
+
+/*
+
+    if (signature.returnType === 'const') {
+      signature.returnType += ' ' + parts.shift();
+    }
+
+
+
+    while (parts.length) {
+      var argType = parts.shift();
+      if (argType === 'const') {
+        argType += ' ' + parts.shift();
+      } else if (argType === '') {
+        continue;
+      } else if (parts.length === 0 && argType === 'void') {
+        break;
+      }
+
+      var argName = parts.shift();
+      if (argName === '') {
+       continue
+      }
+
+
+      if (!argName || !argType) {
+        console.log(signature, parts.length);
+        throw new Error(argName + ' : ' + argType + ' : ' + fn);
+      }
+      signature.arguments[argName] = argType;
+      signature.list.push(argName);
+    }
+
+
+    signature.deploy = function() {
+      var ret = [''];
+      // collect arguments
+      this.list.forEach(function(name, i) {
+
+        var type = this.arguments[name];
+
+        switch (type) {
+          case 'GLenum':
+          case 'GLint':
+            ret.push('  ' + type + ' ' + name + ' = args[' + i + ']->Int32Value();')
+          break;
+          case 'GLfloat':
+            ret.push('  ' + type + ' ' + name + ' = args[' + i + ']->NumberValue();')
+          break;
+
+        }
+
+      }.bind(this));
+
+      ret.push('');
+
+      return ret.join('\n');
+    }
+*/
 
 
   // CONSTANTS
@@ -33,15 +121,12 @@ get('http://www.khronos.org/registry/gles/api/2.0/gl2.h', function(err, res, hea
   headerString.match(/#define (GL_[^ ]+).*/g).forEach(function(constant) {
     constant = constant.replace(/[ ]*\/\*.*\*\/[ ]*/, '');
     constant = constant.replace('#define ', '').replace(/(  *)/g,'", ');
-
-
     init.push('  DEFINE_CONSTANT(target, "' + constant + ');');
-
   });
   init.push('');
 
   var out = cc.join('\n') + init.join('\n') + initPost.join('\n') + '\n';
-  console.log(out);
+
   fs.writeFile(__dirname + '/src/gles2.cc', out, function() {});
 });
 /*

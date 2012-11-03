@@ -5,7 +5,1003 @@
 using namespace v8;
 using namespace node;
 
+
+Handle<Value> GlActiveTexture(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlAttachShader(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlBindAttribLocation(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlBindBuffer(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlBindFramebuffer(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlBindRenderbuffer(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlBindTexture(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlBlendColor(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlBlendEquation(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlBlendEquationSeparate(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlBlendFunc(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlBlendFuncSeparate(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlBufferData(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlBufferSubData(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlCheckFramebufferStatus(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlClear(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlClearColor(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlClearDepthf(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlClearStencil(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlColorMask(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlCompileShader(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlCompressedTexImage2D(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlCompressedTexSubImage2D(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlCopyTexImage2D(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlCopyTexSubImage2D(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlCreateProgram(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlCreateShader(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlCullFace(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlDeleteBuffers(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlDeleteFramebuffers(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlDeleteProgram(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlDeleteRenderbuffers(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlDeleteShader(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlDeleteTextures(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlDepthFunc(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlDepthMask(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlDepthRangef(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlDetachShader(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlDisable(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlDisableVertexAttribArray(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlDrawArrays(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlDrawElements(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlEnable(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlEnableVertexAttribArray(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlFinish(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlFlush(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlFramebufferRenderbuffer(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlFramebufferTexture2D(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlFrontFace(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlGenBuffers(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlGenerateMipmap(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlGenFramebuffers(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlGenRenderbuffers(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlGenTextures(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlGetActiveAttrib(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlGetActiveUniform(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlGetAttachedShaders(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlGetAttribLocation(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlGetBooleanv(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlGetBufferParameteriv(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlGetError(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlGetFloatv(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlGetFramebufferAttachmentParameteriv(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlGetIntegerv(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlGetProgramiv(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlGetProgramInfoLog(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlGetRenderbufferParameteriv(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlGetShaderiv(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlGetShaderInfoLog(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlGetShaderPrecisionFormat(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlGetShaderSource(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlGetString(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlGetTexParameterfv(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlGetTexParameteriv(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlGetUniformfv(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlGetUniformiv(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlGetUniformLocation(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlGetVertexAttribfv(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlGetVertexAttribiv(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlGetVertexAttribPointerv(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlHint(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlIsBuffer(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlIsEnabled(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlIsFramebuffer(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlIsProgram(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlIsRenderbuffer(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlIsShader(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlIsTexture(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlLineWidth(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlLinkProgram(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlPixelStorei(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlPolygonOffset(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlReadPixels(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlReleaseShaderCompiler(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlRenderbufferStorage(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlSampleCoverage(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlScissor(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlShaderBinary(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlShaderSource(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlStencilFunc(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlStencilFuncSeparate(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlStencilMask(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlStencilMaskSeparate(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlStencilOp(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlStencilOpSeparate(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlTexImage2D(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlTexParameterf(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlTexParameterfv(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlTexParameteri(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlTexParameteriv(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlTexSubImage2D(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlUniform1f(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlUniform1fv(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlUniform1i(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlUniform1iv(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlUniform2f(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlUniform2fv(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlUniform2i(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlUniform2iv(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlUniform3f(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlUniform3fv(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlUniform3i(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlUniform3iv(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlUniform4f(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlUniform4fv(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlUniform4i(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlUniform4iv(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlUniformMatrix2fv(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlUniformMatrix3fv(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlUniformMatrix4fv(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlUseProgram(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlValidateProgram(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlVertexAttrib1f(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlVertexAttrib1fv(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlVertexAttrib2f(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlVertexAttrib2fv(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlVertexAttrib3f(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlVertexAttrib3fv(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlVertexAttrib4f(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlVertexAttrib4fv(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlVertexAttribPointer(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlViewport(const Arguments& args) {
+  HandleScope scope;
+
+  return scope.Close(Undefined());
+}
 void init(Handle<Object> target) {
+
+  // Methods
+  SetMethod(target, "glActiveTexture", GlActiveTexture);
+  SetMethod(target, "glAttachShader", GlAttachShader);
+  SetMethod(target, "glBindAttribLocation", GlBindAttribLocation);
+  SetMethod(target, "glBindBuffer", GlBindBuffer);
+  SetMethod(target, "glBindFramebuffer", GlBindFramebuffer);
+  SetMethod(target, "glBindRenderbuffer", GlBindRenderbuffer);
+  SetMethod(target, "glBindTexture", GlBindTexture);
+  SetMethod(target, "glBlendColor", GlBlendColor);
+  SetMethod(target, "glBlendEquation", GlBlendEquation);
+  SetMethod(target, "glBlendEquationSeparate", GlBlendEquationSeparate);
+  SetMethod(target, "glBlendFunc", GlBlendFunc);
+  SetMethod(target, "glBlendFuncSeparate", GlBlendFuncSeparate);
+  SetMethod(target, "glBufferData", GlBufferData);
+  SetMethod(target, "glBufferSubData", GlBufferSubData);
+  SetMethod(target, "glCheckFramebufferStatus", GlCheckFramebufferStatus);
+  SetMethod(target, "glClear", GlClear);
+  SetMethod(target, "glClearColor", GlClearColor);
+  SetMethod(target, "glClearDepthf", GlClearDepthf);
+  SetMethod(target, "glClearStencil", GlClearStencil);
+  SetMethod(target, "glColorMask", GlColorMask);
+  SetMethod(target, "glCompileShader", GlCompileShader);
+  SetMethod(target, "glCompressedTexImage2D", GlCompressedTexImage2D);
+  SetMethod(target, "glCompressedTexSubImage2D", GlCompressedTexSubImage2D);
+  SetMethod(target, "glCopyTexImage2D", GlCopyTexImage2D);
+  SetMethod(target, "glCopyTexSubImage2D", GlCopyTexSubImage2D);
+  SetMethod(target, "glCreateProgram", GlCreateProgram);
+  SetMethod(target, "glCreateShader", GlCreateShader);
+  SetMethod(target, "glCullFace", GlCullFace);
+  SetMethod(target, "glDeleteBuffers", GlDeleteBuffers);
+  SetMethod(target, "glDeleteFramebuffers", GlDeleteFramebuffers);
+  SetMethod(target, "glDeleteProgram", GlDeleteProgram);
+  SetMethod(target, "glDeleteRenderbuffers", GlDeleteRenderbuffers);
+  SetMethod(target, "glDeleteShader", GlDeleteShader);
+  SetMethod(target, "glDeleteTextures", GlDeleteTextures);
+  SetMethod(target, "glDepthFunc", GlDepthFunc);
+  SetMethod(target, "glDepthMask", GlDepthMask);
+  SetMethod(target, "glDepthRangef", GlDepthRangef);
+  SetMethod(target, "glDetachShader", GlDetachShader);
+  SetMethod(target, "glDisable", GlDisable);
+  SetMethod(target, "glDisableVertexAttribArray", GlDisableVertexAttribArray);
+  SetMethod(target, "glDrawArrays", GlDrawArrays);
+  SetMethod(target, "glDrawElements", GlDrawElements);
+  SetMethod(target, "glEnable", GlEnable);
+  SetMethod(target, "glEnableVertexAttribArray", GlEnableVertexAttribArray);
+  SetMethod(target, "glFinish", GlFinish);
+  SetMethod(target, "glFlush", GlFlush);
+  SetMethod(target, "glFramebufferRenderbuffer", GlFramebufferRenderbuffer);
+  SetMethod(target, "glFramebufferTexture2D", GlFramebufferTexture2D);
+  SetMethod(target, "glFrontFace", GlFrontFace);
+  SetMethod(target, "glGenBuffers", GlGenBuffers);
+  SetMethod(target, "glGenerateMipmap", GlGenerateMipmap);
+  SetMethod(target, "glGenFramebuffers", GlGenFramebuffers);
+  SetMethod(target, "glGenRenderbuffers", GlGenRenderbuffers);
+  SetMethod(target, "glGenTextures", GlGenTextures);
+  SetMethod(target, "glGetActiveAttrib", GlGetActiveAttrib);
+  SetMethod(target, "glGetActiveUniform", GlGetActiveUniform);
+  SetMethod(target, "glGetAttachedShaders", GlGetAttachedShaders);
+  SetMethod(target, "glGetAttribLocation", GlGetAttribLocation);
+  SetMethod(target, "glGetBooleanv", GlGetBooleanv);
+  SetMethod(target, "glGetBufferParameteriv", GlGetBufferParameteriv);
+  SetMethod(target, "glGetError", GlGetError);
+  SetMethod(target, "glGetFloatv", GlGetFloatv);
+  SetMethod(target, "glGetFramebufferAttachmentParameteriv", GlGetFramebufferAttachmentParameteriv);
+  SetMethod(target, "glGetIntegerv", GlGetIntegerv);
+  SetMethod(target, "glGetProgramiv", GlGetProgramiv);
+  SetMethod(target, "glGetProgramInfoLog", GlGetProgramInfoLog);
+  SetMethod(target, "glGetRenderbufferParameteriv", GlGetRenderbufferParameteriv);
+  SetMethod(target, "glGetShaderiv", GlGetShaderiv);
+  SetMethod(target, "glGetShaderInfoLog", GlGetShaderInfoLog);
+  SetMethod(target, "glGetShaderPrecisionFormat", GlGetShaderPrecisionFormat);
+  SetMethod(target, "glGetShaderSource", GlGetShaderSource);
+  SetMethod(target, "glGetString", GlGetString);
+  SetMethod(target, "glGetTexParameterfv", GlGetTexParameterfv);
+  SetMethod(target, "glGetTexParameteriv", GlGetTexParameteriv);
+  SetMethod(target, "glGetUniformfv", GlGetUniformfv);
+  SetMethod(target, "glGetUniformiv", GlGetUniformiv);
+  SetMethod(target, "glGetUniformLocation", GlGetUniformLocation);
+  SetMethod(target, "glGetVertexAttribfv", GlGetVertexAttribfv);
+  SetMethod(target, "glGetVertexAttribiv", GlGetVertexAttribiv);
+  SetMethod(target, "glGetVertexAttribPointerv", GlGetVertexAttribPointerv);
+  SetMethod(target, "glHint", GlHint);
+  SetMethod(target, "glIsBuffer", GlIsBuffer);
+  SetMethod(target, "glIsEnabled", GlIsEnabled);
+  SetMethod(target, "glIsFramebuffer", GlIsFramebuffer);
+  SetMethod(target, "glIsProgram", GlIsProgram);
+  SetMethod(target, "glIsRenderbuffer", GlIsRenderbuffer);
+  SetMethod(target, "glIsShader", GlIsShader);
+  SetMethod(target, "glIsTexture", GlIsTexture);
+  SetMethod(target, "glLineWidth", GlLineWidth);
+  SetMethod(target, "glLinkProgram", GlLinkProgram);
+  SetMethod(target, "glPixelStorei", GlPixelStorei);
+  SetMethod(target, "glPolygonOffset", GlPolygonOffset);
+  SetMethod(target, "glReadPixels", GlReadPixels);
+  SetMethod(target, "glReleaseShaderCompiler", GlReleaseShaderCompiler);
+  SetMethod(target, "glRenderbufferStorage", GlRenderbufferStorage);
+  SetMethod(target, "glSampleCoverage", GlSampleCoverage);
+  SetMethod(target, "glScissor", GlScissor);
+  SetMethod(target, "glShaderBinary", GlShaderBinary);
+  SetMethod(target, "glShaderSource", GlShaderSource);
+  SetMethod(target, "glStencilFunc", GlStencilFunc);
+  SetMethod(target, "glStencilFuncSeparate", GlStencilFuncSeparate);
+  SetMethod(target, "glStencilMask", GlStencilMask);
+  SetMethod(target, "glStencilMaskSeparate", GlStencilMaskSeparate);
+  SetMethod(target, "glStencilOp", GlStencilOp);
+  SetMethod(target, "glStencilOpSeparate", GlStencilOpSeparate);
+  SetMethod(target, "glTexImage2D", GlTexImage2D);
+  SetMethod(target, "glTexParameterf", GlTexParameterf);
+  SetMethod(target, "glTexParameterfv", GlTexParameterfv);
+  SetMethod(target, "glTexParameteri", GlTexParameteri);
+  SetMethod(target, "glTexParameteriv", GlTexParameteriv);
+  SetMethod(target, "glTexSubImage2D", GlTexSubImage2D);
+  SetMethod(target, "glUniform1f", GlUniform1f);
+  SetMethod(target, "glUniform1fv", GlUniform1fv);
+  SetMethod(target, "glUniform1i", GlUniform1i);
+  SetMethod(target, "glUniform1iv", GlUniform1iv);
+  SetMethod(target, "glUniform2f", GlUniform2f);
+  SetMethod(target, "glUniform2fv", GlUniform2fv);
+  SetMethod(target, "glUniform2i", GlUniform2i);
+  SetMethod(target, "glUniform2iv", GlUniform2iv);
+  SetMethod(target, "glUniform3f", GlUniform3f);
+  SetMethod(target, "glUniform3fv", GlUniform3fv);
+  SetMethod(target, "glUniform3i", GlUniform3i);
+  SetMethod(target, "glUniform3iv", GlUniform3iv);
+  SetMethod(target, "glUniform4f", GlUniform4f);
+  SetMethod(target, "glUniform4fv", GlUniform4fv);
+  SetMethod(target, "glUniform4i", GlUniform4i);
+  SetMethod(target, "glUniform4iv", GlUniform4iv);
+  SetMethod(target, "glUniformMatrix2fv", GlUniformMatrix2fv);
+  SetMethod(target, "glUniformMatrix3fv", GlUniformMatrix3fv);
+  SetMethod(target, "glUniformMatrix4fv", GlUniformMatrix4fv);
+  SetMethod(target, "glUseProgram", GlUseProgram);
+  SetMethod(target, "glValidateProgram", GlValidateProgram);
+  SetMethod(target, "glVertexAttrib1f", GlVertexAttrib1f);
+  SetMethod(target, "glVertexAttrib1fv", GlVertexAttrib1fv);
+  SetMethod(target, "glVertexAttrib2f", GlVertexAttrib2f);
+  SetMethod(target, "glVertexAttrib2fv", GlVertexAttrib2fv);
+  SetMethod(target, "glVertexAttrib3f", GlVertexAttrib3f);
+  SetMethod(target, "glVertexAttrib3fv", GlVertexAttrib3fv);
+  SetMethod(target, "glVertexAttrib4f", GlVertexAttrib4f);
+  SetMethod(target, "glVertexAttrib4fv", GlVertexAttrib4fv);
+  SetMethod(target, "glVertexAttribPointer", GlVertexAttribPointer);
+  SetMethod(target, "glViewport", GlViewport);
 
   // Constants
   DEFINE_CONSTANT(target, "GL_ES_VERSION_2_0", 1);
@@ -312,4 +1308,4 @@ void init(Handle<Object> target) {
   DEFINE_CONSTANT(target, "GL_INVALID_FRAMEBUFFER_OPERATION", 0x0506);
 }
 
-NODE_MODULE(webgl, init)
+NODE_MODULE(gles2, init)
