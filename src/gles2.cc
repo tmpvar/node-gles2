@@ -9,89 +9,169 @@ using namespace node;
 Handle<Value> GlActiveTexture(const Arguments& args) {
   HandleScope scope;
 
+  GLenum texture = args[0]->Int32Value();
+
+  glActiveTexture(texture);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlAttachShader(const Arguments& args) {
   HandleScope scope;
 
+  GLuint program = args[0]->Uint32Value();
+  GLuint shader = args[1]->Uint32Value();
+
+  glAttachShader(program, shader);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlBindAttribLocation(const Arguments& args) {
   HandleScope scope;
 
+  GLuint program = args[0]->Uint32Value();
+  GLuint index = args[1]->Uint32Value();
+  v8::String::Utf8Value string_name(args[2]);
+  const GLchar* name = *string_name;
+
+  glBindAttribLocation(program, index, name);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlBindBuffer(const Arguments& args) {
   HandleScope scope;
 
+  GLenum target = args[0]->Int32Value();
+  GLuint buffer = args[1]->Uint32Value();
+
+  glBindBuffer(target, buffer);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlBindFramebuffer(const Arguments& args) {
   HandleScope scope;
 
+  GLenum target = args[0]->Int32Value();
+  GLuint framebuffer = args[1]->Uint32Value();
+
+  glBindFramebuffer(target, framebuffer);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlBindRenderbuffer(const Arguments& args) {
   HandleScope scope;
 
+  GLenum target = args[0]->Int32Value();
+  GLuint renderbuffer = args[1]->Uint32Value();
+
+  glBindRenderbuffer(target, renderbuffer);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlBindTexture(const Arguments& args) {
   HandleScope scope;
 
+  GLenum target = args[0]->Int32Value();
+  GLuint texture = args[1]->Uint32Value();
+
+  glBindTexture(target, texture);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlBlendColor(const Arguments& args) {
   HandleScope scope;
 
+  GLclampf red = args[0]->NumberValue();
+  GLclampf green = args[1]->NumberValue();
+  GLclampf blue = args[2]->NumberValue();
+  GLclampf alpha = args[3]->NumberValue();
+
+  glBlendColor(red, green, blue, alpha);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlBlendEquation(const Arguments& args) {
   HandleScope scope;
 
+  GLenum mode = args[0]->Int32Value();
+
+  glBlendEquation(mode);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlBlendEquationSeparate(const Arguments& args) {
   HandleScope scope;
 
+  GLenum modeRGB = args[0]->Int32Value();
+  GLenum modeAlpha = args[1]->Int32Value();
+
+  glBlendEquationSeparate(modeRGB, modeAlpha);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlBlendFunc(const Arguments& args) {
   HandleScope scope;
 
+  GLenum sfactor = args[0]->Int32Value();
+  GLenum dfactor = args[1]->Int32Value();
+
+  glBlendFunc(sfactor, dfactor);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlBlendFuncSeparate(const Arguments& args) {
   HandleScope scope;
 
+  GLenum srcRGB = args[0]->Int32Value();
+  GLenum dstRGB = args[1]->Int32Value();
+  GLenum srcAlpha = args[2]->Int32Value();
+  GLenum dstAlpha = args[3]->Int32Value();
+
+  glBlendFuncSeparate(srcRGB, dstRGB, srcAlpha, dstAlpha);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlBufferData(const Arguments& args) {
   HandleScope scope;
 
+  GLenum target = args[0]->Int32Value();
+  GLsizeiptr size = args[1]->Uint32Value();
+
+  // buffer
+  Local<Object> obj_data = args[0]->ToObject();
+  if (obj_data->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
+    
+  }
+  const GLvoid* data = static_cast<const GLvoid*>(obj_data->GetIndexedPropertiesExternalArrayData());
+
+  GLenum usage = args[3]->Int32Value();
+
+  glBufferData(target, size, data, usage);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlBufferSubData(const Arguments& args) {
   HandleScope scope;
 
+  GLenum target = args[0]->Int32Value();
+  GLintptr offset = args[1]->Uint32Value();
+  GLsizeiptr size = args[2]->Uint32Value();
+
+  // buffer
+  Local<Object> obj_data = args[0]->ToObject();
+  if (obj_data->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
+    
+  }
+  const GLvoid* data = static_cast<const GLvoid*>(obj_data->GetIndexedPropertiesExternalArrayData());
+
+
+  glBufferSubData(target, offset, size, data);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlCheckFramebufferStatus(const Arguments& args) {
   HandleScope scope;
+
+  GLenum target = args[0]->Int32Value();
 
   return scope.Close(Undefined());
 }
@@ -99,65 +179,145 @@ Handle<Value> GlCheckFramebufferStatus(const Arguments& args) {
 Handle<Value> GlClear(const Arguments& args) {
   HandleScope scope;
 
+  GLbitfield mask = args[0]->Int32Value();
+
+  glClear(mask);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlClearColor(const Arguments& args) {
   HandleScope scope;
 
+  GLclampf red = args[0]->NumberValue();
+  GLclampf green = args[1]->NumberValue();
+  GLclampf blue = args[2]->NumberValue();
+  GLclampf alpha = args[3]->NumberValue();
+
+  glClearColor(red, green, blue, alpha);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlClearDepthf(const Arguments& args) {
   HandleScope scope;
 
+  GLclampf depth = args[0]->NumberValue();
+
+  glClearDepthf(depth);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlClearStencil(const Arguments& args) {
   HandleScope scope;
 
+  GLint s = args[0]->Int32Value();
+
+  glClearStencil(s);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlColorMask(const Arguments& args) {
   HandleScope scope;
 
+  GLboolean red = (GLboolean)args[0]->Int32Value();
+  GLboolean green = (GLboolean)args[1]->Int32Value();
+  GLboolean blue = (GLboolean)args[2]->Int32Value();
+  GLboolean alpha = (GLboolean)args[3]->Int32Value();
+
+  glColorMask(red, green, blue, alpha);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlCompileShader(const Arguments& args) {
   HandleScope scope;
 
+  GLuint shader = args[0]->Uint32Value();
+
+  glCompileShader(shader);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlCompressedTexImage2D(const Arguments& args) {
   HandleScope scope;
 
+  GLenum target = args[0]->Int32Value();
+  GLint level = args[1]->Int32Value();
+  GLenum internalformat = args[2]->Int32Value();
+  GLsizei width = args[3]->Int32Value();
+  GLsizei height = args[4]->Int32Value();
+  GLint border = args[5]->Int32Value();
+  GLsizei imageSize = args[6]->Int32Value();
+
+  // buffer
+  Local<Object> obj_data = args[0]->ToObject();
+  if (obj_data->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
+    
+  }
+  const GLvoid* data = static_cast<const GLvoid*>(obj_data->GetIndexedPropertiesExternalArrayData());
+
+
+  glCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlCompressedTexSubImage2D(const Arguments& args) {
   HandleScope scope;
 
+  GLenum target = args[0]->Int32Value();
+  GLint level = args[1]->Int32Value();
+  GLint xoffset = args[2]->Int32Value();
+  GLint yoffset = args[3]->Int32Value();
+  GLsizei width = args[4]->Int32Value();
+  GLsizei height = args[5]->Int32Value();
+  GLenum format = args[6]->Int32Value();
+  GLsizei imageSize = args[7]->Int32Value();
+
+  // buffer
+  Local<Object> obj_data = args[0]->ToObject();
+  if (obj_data->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
+    
+  }
+  const GLvoid* data = static_cast<const GLvoid*>(obj_data->GetIndexedPropertiesExternalArrayData());
+
+
+  glCompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize, data);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlCopyTexImage2D(const Arguments& args) {
   HandleScope scope;
 
+  GLenum target = args[0]->Int32Value();
+  GLint level = args[1]->Int32Value();
+  GLenum internalformat = args[2]->Int32Value();
+  GLint x = args[3]->Int32Value();
+  GLint y = args[4]->Int32Value();
+  GLsizei width = args[5]->Int32Value();
+  GLsizei height = args[6]->Int32Value();
+  GLint border = args[7]->Int32Value();
+
+  glCopyTexImage2D(target, level, internalformat, x, y, width, height, border);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlCopyTexSubImage2D(const Arguments& args) {
   HandleScope scope;
 
+  GLenum target = args[0]->Int32Value();
+  GLint level = args[1]->Int32Value();
+  GLint xoffset = args[2]->Int32Value();
+  GLint yoffset = args[3]->Int32Value();
+  GLint x = args[4]->Int32Value();
+  GLint y = args[5]->Int32Value();
+  GLsizei width = args[6]->Int32Value();
+  GLsizei height = args[7]->Int32Value();
+
+  glCopyTexSubImage2D(target, level, xoffset, yoffset, x, y, width, height);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlCreateProgram(const Arguments& args) {
   HandleScope scope;
+
 
   return scope.Close(Undefined());
 }
@@ -165,191 +325,347 @@ Handle<Value> GlCreateProgram(const Arguments& args) {
 Handle<Value> GlCreateShader(const Arguments& args) {
   HandleScope scope;
 
+  GLenum type = args[0]->Int32Value();
+
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlCullFace(const Arguments& args) {
   HandleScope scope;
 
+  GLenum mode = args[0]->Int32Value();
+
+  glCullFace(mode);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlDeleteBuffers(const Arguments& args) {
   HandleScope scope;
 
+  GLsizei n = args[0]->Int32Value();
+
+  // list of Gluints
+  Handle<Array> array_buffers = Handle<Array>::Cast(args[1]);
+  int length = array_buffers->Get(String::New("length"))->ToObject()->Uint32Value();
+  GLuint buffers[length];
+  for (int i=0; i<length; i++) {
+    buffers[i] = array_buffers->Get(i)->ToObject()->Uint32Value();
+  }
+
+
+  glDeleteBuffers(n, buffers);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlDeleteFramebuffers(const Arguments& args) {
   HandleScope scope;
 
+  GLsizei n = args[0]->Int32Value();
+
+  // list of Gluints
+  Handle<Array> array_framebuffers = Handle<Array>::Cast(args[1]);
+  int length = array_framebuffers->Get(String::New("length"))->ToObject()->Uint32Value();
+  GLuint framebuffers[length];
+  for (int i=0; i<length; i++) {
+    framebuffers[i] = array_framebuffers->Get(i)->ToObject()->Uint32Value();
+  }
+
+
+  glDeleteFramebuffers(n, framebuffers);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlDeleteProgram(const Arguments& args) {
   HandleScope scope;
 
+  GLuint program = args[0]->Uint32Value();
+
+  glDeleteProgram(program);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlDeleteRenderbuffers(const Arguments& args) {
   HandleScope scope;
 
+  GLsizei n = args[0]->Int32Value();
+
+  // list of Gluints
+  Handle<Array> array_renderbuffers = Handle<Array>::Cast(args[1]);
+  int length = array_renderbuffers->Get(String::New("length"))->ToObject()->Uint32Value();
+  GLuint renderbuffers[length];
+  for (int i=0; i<length; i++) {
+    renderbuffers[i] = array_renderbuffers->Get(i)->ToObject()->Uint32Value();
+  }
+
+
+  glDeleteRenderbuffers(n, renderbuffers);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlDeleteShader(const Arguments& args) {
   HandleScope scope;
 
+  GLuint shader = args[0]->Uint32Value();
+
+  glDeleteShader(shader);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlDeleteTextures(const Arguments& args) {
   HandleScope scope;
 
+  GLsizei n = args[0]->Int32Value();
+
+  // list of Gluints
+  Handle<Array> array_textures = Handle<Array>::Cast(args[1]);
+  int length = array_textures->Get(String::New("length"))->ToObject()->Uint32Value();
+  GLuint textures[length];
+  for (int i=0; i<length; i++) {
+    textures[i] = array_textures->Get(i)->ToObject()->Uint32Value();
+  }
+
+
+  glDeleteTextures(n, textures);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlDepthFunc(const Arguments& args) {
   HandleScope scope;
 
+  GLenum func = args[0]->Int32Value();
+
+  glDepthFunc(func);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlDepthMask(const Arguments& args) {
   HandleScope scope;
 
+  GLboolean flag = (GLboolean)args[0]->Int32Value();
+
+  glDepthMask(flag);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlDepthRangef(const Arguments& args) {
   HandleScope scope;
 
+  GLclampf zNear = args[0]->NumberValue();
+  GLclampf zFar = args[1]->NumberValue();
+
+  glDepthRangef(zNear, zFar);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlDetachShader(const Arguments& args) {
   HandleScope scope;
 
+  GLuint program = args[0]->Uint32Value();
+  GLuint shader = args[1]->Uint32Value();
+
+  glDetachShader(program, shader);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlDisable(const Arguments& args) {
   HandleScope scope;
 
+  GLenum cap = args[0]->Int32Value();
+
+  glDisable(cap);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlDisableVertexAttribArray(const Arguments& args) {
   HandleScope scope;
 
+  GLuint index = args[0]->Uint32Value();
+
+  glDisableVertexAttribArray(index);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlDrawArrays(const Arguments& args) {
   HandleScope scope;
 
+  GLenum mode = args[0]->Int32Value();
+  GLint first = args[1]->Int32Value();
+  GLsizei count = args[2]->Int32Value();
+
+  glDrawArrays(mode, first, count);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlDrawElements(const Arguments& args) {
   HandleScope scope;
 
+  GLenum mode = args[0]->Int32Value();
+  GLsizei count = args[1]->Int32Value();
+  GLenum type = args[2]->Int32Value();
+
+  // buffer
+  Local<Object> obj_indices = args[0]->ToObject();
+  if (obj_indices->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
+    
+  }
+  const GLvoid* indices = static_cast<const GLvoid*>(obj_indices->GetIndexedPropertiesExternalArrayData());
+
+
+  glDrawElements(mode, count, type, indices);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlEnable(const Arguments& args) {
   HandleScope scope;
 
+  GLenum cap = args[0]->Int32Value();
+
+  glEnable(cap);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlEnableVertexAttribArray(const Arguments& args) {
   HandleScope scope;
 
+  GLuint index = args[0]->Uint32Value();
+
+  glEnableVertexAttribArray(index);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlFinish(const Arguments& args) {
   HandleScope scope;
 
+
+  glFinish();
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlFlush(const Arguments& args) {
   HandleScope scope;
 
+
+  glFlush();
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlFramebufferRenderbuffer(const Arguments& args) {
   HandleScope scope;
 
+  GLenum target = args[0]->Int32Value();
+  GLenum attachment = args[1]->Int32Value();
+  GLenum renderbuffertarget = args[2]->Int32Value();
+  GLuint renderbuffer = args[3]->Uint32Value();
+
+  glFramebufferRenderbuffer(target, attachment, renderbuffertarget, renderbuffer);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlFramebufferTexture2D(const Arguments& args) {
   HandleScope scope;
 
+  GLenum target = args[0]->Int32Value();
+  GLenum attachment = args[1]->Int32Value();
+  GLenum textarget = args[2]->Int32Value();
+  GLuint texture = args[3]->Uint32Value();
+  GLint level = args[4]->Int32Value();
+
+  glFramebufferTexture2D(target, attachment, textarget, texture, level);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlFrontFace(const Arguments& args) {
   HandleScope scope;
 
+  GLenum mode = args[0]->Int32Value();
+
+  glFrontFace(mode);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlGenBuffers(const Arguments& args) {
   HandleScope scope;
 
+  GLsizei n = args[0]->Int32Value();
+
+  glGenBuffers(n, buffers);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlGenerateMipmap(const Arguments& args) {
   HandleScope scope;
 
+  GLenum target = args[0]->Int32Value();
+
+  glGenerateMipmap(target);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlGenFramebuffers(const Arguments& args) {
   HandleScope scope;
 
+  GLsizei n = args[0]->Int32Value();
+
+  glGenFramebuffers(n, framebuffers);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlGenRenderbuffers(const Arguments& args) {
   HandleScope scope;
 
+  GLsizei n = args[0]->Int32Value();
+
+  glGenRenderbuffers(n, renderbuffers);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlGenTextures(const Arguments& args) {
   HandleScope scope;
 
+  GLsizei n = args[0]->Int32Value();
+
+  glGenTextures(n, textures);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlGetActiveAttrib(const Arguments& args) {
   HandleScope scope;
 
+  GLuint program = args[0]->Uint32Value();
+  GLuint index = args[1]->Uint32Value();
+  GLsizei bufsize = args[2]->Int32Value();
+
+  glGetActiveAttrib(program, index, bufsize, length, size, type, name);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlGetActiveUniform(const Arguments& args) {
   HandleScope scope;
 
+  GLuint program = args[0]->Uint32Value();
+  GLuint index = args[1]->Uint32Value();
+  GLsizei bufsize = args[2]->Int32Value();
+
+  glGetActiveUniform(program, index, bufsize, length, size, type, name);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlGetAttachedShaders(const Arguments& args) {
   HandleScope scope;
 
+  GLuint program = args[0]->Uint32Value();
+  GLsizei maxcount = args[1]->Int32Value();
+
+  glGetAttachedShaders(program, maxcount, count, shaders);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlGetAttribLocation(const Arguments& args) {
   HandleScope scope;
+
+  GLuint program = args[0]->Uint32Value();
+  v8::String::Utf8Value string_name(args[1]);
+  const GLchar* name = *string_name;
 
   return scope.Close(Undefined());
 }
@@ -357,17 +673,25 @@ Handle<Value> GlGetAttribLocation(const Arguments& args) {
 Handle<Value> GlGetBooleanv(const Arguments& args) {
   HandleScope scope;
 
+  GLenum pname = args[0]->Int32Value();
+
+  glGetBooleanv(pname, params);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlGetBufferParameteriv(const Arguments& args) {
   HandleScope scope;
 
+  GLenum target = args[0]->Int32Value();
+  GLenum pname = args[1]->Int32Value();
+
+  glGetBufferParameteriv(target, pname, params);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlGetError(const Arguments& args) {
   HandleScope scope;
+
 
   return scope.Close(Undefined());
 }
@@ -375,65 +699,106 @@ Handle<Value> GlGetError(const Arguments& args) {
 Handle<Value> GlGetFloatv(const Arguments& args) {
   HandleScope scope;
 
+  GLenum pname = args[0]->Int32Value();
+
+  glGetFloatv(pname, params);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlGetFramebufferAttachmentParameteriv(const Arguments& args) {
   HandleScope scope;
 
+  GLenum target = args[0]->Int32Value();
+  GLenum attachment = args[1]->Int32Value();
+  GLenum pname = args[2]->Int32Value();
+
+  glGetFramebufferAttachmentParameteriv(target, attachment, pname, params);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlGetIntegerv(const Arguments& args) {
   HandleScope scope;
 
+  GLenum pname = args[0]->Int32Value();
+
+  glGetIntegerv(pname, params);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlGetProgramiv(const Arguments& args) {
   HandleScope scope;
 
+  GLuint program = args[0]->Uint32Value();
+  GLenum pname = args[1]->Int32Value();
+
+  glGetProgramiv(program, pname, params);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlGetProgramInfoLog(const Arguments& args) {
   HandleScope scope;
 
+  GLuint program = args[0]->Uint32Value();
+  GLsizei bufsize = args[1]->Int32Value();
+
+  glGetProgramInfoLog(program, bufsize, length, infolog);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlGetRenderbufferParameteriv(const Arguments& args) {
   HandleScope scope;
 
+  GLenum target = args[0]->Int32Value();
+  GLenum pname = args[1]->Int32Value();
+
+  glGetRenderbufferParameteriv(target, pname, params);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlGetShaderiv(const Arguments& args) {
   HandleScope scope;
 
+  GLuint shader = args[0]->Uint32Value();
+  GLenum pname = args[1]->Int32Value();
+
+  glGetShaderiv(shader, pname, params);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlGetShaderInfoLog(const Arguments& args) {
   HandleScope scope;
 
+  GLuint shader = args[0]->Uint32Value();
+  GLsizei bufsize = args[1]->Int32Value();
+
+  glGetShaderInfoLog(shader, bufsize, length, infolog);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlGetShaderPrecisionFormat(const Arguments& args) {
   HandleScope scope;
 
+  GLenum shadertype = args[0]->Int32Value();
+  GLenum precisiontype = args[1]->Int32Value();
+
+  glGetShaderPrecisionFormat(shadertype, precisiontype, range, precision);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlGetShaderSource(const Arguments& args) {
   HandleScope scope;
 
+  GLuint shader = args[0]->Uint32Value();
+  GLsizei bufsize = args[1]->Int32Value();
+
+  glGetShaderSource(shader, bufsize, length, source);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlGetString(const Arguments& args) {
   HandleScope scope;
+
+  GLenum name = args[0]->Int32Value();
 
   return scope.Close(Undefined());
 }
@@ -441,29 +806,49 @@ Handle<Value> GlGetString(const Arguments& args) {
 Handle<Value> GlGetTexParameterfv(const Arguments& args) {
   HandleScope scope;
 
+  GLenum target = args[0]->Int32Value();
+  GLenum pname = args[1]->Int32Value();
+
+  glGetTexParameterfv(target, pname, params);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlGetTexParameteriv(const Arguments& args) {
   HandleScope scope;
 
+  GLenum target = args[0]->Int32Value();
+  GLenum pname = args[1]->Int32Value();
+
+  glGetTexParameteriv(target, pname, params);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlGetUniformfv(const Arguments& args) {
   HandleScope scope;
 
+  GLuint program = args[0]->Uint32Value();
+  GLint location = args[1]->Int32Value();
+
+  glGetUniformfv(program, location, params);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlGetUniformiv(const Arguments& args) {
   HandleScope scope;
 
+  GLuint program = args[0]->Uint32Value();
+  GLint location = args[1]->Int32Value();
+
+  glGetUniformiv(program, location, params);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlGetUniformLocation(const Arguments& args) {
   HandleScope scope;
+
+  GLuint program = args[0]->Uint32Value();
+  v8::String::Utf8Value string_name(args[1]);
+  const GLchar* name = *string_name;
 
   return scope.Close(Undefined());
 }
@@ -471,29 +856,47 @@ Handle<Value> GlGetUniformLocation(const Arguments& args) {
 Handle<Value> GlGetVertexAttribfv(const Arguments& args) {
   HandleScope scope;
 
+  GLuint index = args[0]->Uint32Value();
+  GLenum pname = args[1]->Int32Value();
+
+  glGetVertexAttribfv(index, pname, params);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlGetVertexAttribiv(const Arguments& args) {
   HandleScope scope;
 
+  GLuint index = args[0]->Uint32Value();
+  GLenum pname = args[1]->Int32Value();
+
+  glGetVertexAttribiv(index, pname, params);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlGetVertexAttribPointerv(const Arguments& args) {
   HandleScope scope;
 
+  GLuint index = args[0]->Uint32Value();
+  GLenum pname = args[1]->Int32Value();
+
+  glGetVertexAttribPointerv(index, pname, pointer);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlHint(const Arguments& args) {
   HandleScope scope;
 
+  GLenum target = args[0]->Int32Value();
+  GLenum mode = args[1]->Int32Value();
+
+  glHint(target, mode);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlIsBuffer(const Arguments& args) {
   HandleScope scope;
+
+  GLuint buffer = args[0]->Uint32Value();
 
   return scope.Close(Undefined());
 }
@@ -501,11 +904,15 @@ Handle<Value> GlIsBuffer(const Arguments& args) {
 Handle<Value> GlIsEnabled(const Arguments& args) {
   HandleScope scope;
 
+  GLenum cap = args[0]->Int32Value();
+
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlIsFramebuffer(const Arguments& args) {
   HandleScope scope;
+
+  GLuint framebuffer = args[0]->Uint32Value();
 
   return scope.Close(Undefined());
 }
@@ -513,11 +920,15 @@ Handle<Value> GlIsFramebuffer(const Arguments& args) {
 Handle<Value> GlIsProgram(const Arguments& args) {
   HandleScope scope;
 
+  GLuint program = args[0]->Uint32Value();
+
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlIsRenderbuffer(const Arguments& args) {
   HandleScope scope;
+
+  GLuint renderbuffer = args[0]->Uint32Value();
 
   return scope.Close(Undefined());
 }
@@ -525,11 +936,15 @@ Handle<Value> GlIsRenderbuffer(const Arguments& args) {
 Handle<Value> GlIsShader(const Arguments& args) {
   HandleScope scope;
 
+  GLuint shader = args[0]->Uint32Value();
+
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlIsTexture(const Arguments& args) {
   HandleScope scope;
+
+  GLuint texture = args[0]->Uint32Value();
 
   return scope.Close(Undefined());
 }
@@ -537,324 +952,723 @@ Handle<Value> GlIsTexture(const Arguments& args) {
 Handle<Value> GlLineWidth(const Arguments& args) {
   HandleScope scope;
 
+  GLfloat width = args[0]->NumberValue();
+
+  glLineWidth(width);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlLinkProgram(const Arguments& args) {
   HandleScope scope;
 
+  GLuint program = args[0]->Uint32Value();
+
+  glLinkProgram(program);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlPixelStorei(const Arguments& args) {
   HandleScope scope;
 
+  GLenum pname = args[0]->Int32Value();
+  GLint param = args[1]->Int32Value();
+
+  glPixelStorei(pname, param);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlPolygonOffset(const Arguments& args) {
   HandleScope scope;
 
+  GLfloat factor = args[0]->NumberValue();
+  GLfloat units = args[1]->NumberValue();
+
+  glPolygonOffset(factor, units);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlReadPixels(const Arguments& args) {
   HandleScope scope;
 
+  GLint x = args[0]->Int32Value();
+  GLint y = args[1]->Int32Value();
+  GLsizei width = args[2]->Int32Value();
+  GLsizei height = args[3]->Int32Value();
+  GLenum format = args[4]->Int32Value();
+  GLenum type = args[5]->Int32Value();
+
+  glReadPixels(x, y, width, height, format, type, pixels);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlReleaseShaderCompiler(const Arguments& args) {
   HandleScope scope;
 
+
+  glReleaseShaderCompiler();
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlRenderbufferStorage(const Arguments& args) {
   HandleScope scope;
 
+  GLenum target = args[0]->Int32Value();
+  GLenum internalformat = args[1]->Int32Value();
+  GLsizei width = args[2]->Int32Value();
+  GLsizei height = args[3]->Int32Value();
+
+  glRenderbufferStorage(target, internalformat, width, height);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlSampleCoverage(const Arguments& args) {
   HandleScope scope;
 
+  GLclampf value = args[0]->NumberValue();
+  GLboolean invert = (GLboolean)args[1]->Int32Value();
+
+  glSampleCoverage(value, invert);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlScissor(const Arguments& args) {
   HandleScope scope;
 
+  GLint x = args[0]->Int32Value();
+  GLint y = args[1]->Int32Value();
+  GLsizei width = args[2]->Int32Value();
+  GLsizei height = args[3]->Int32Value();
+
+  glScissor(x, y, width, height);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlShaderBinary(const Arguments& args) {
   HandleScope scope;
 
+  GLsizei n = args[0]->Int32Value();
+
+  // list of Gluints
+  Handle<Array> array_shaders = Handle<Array>::Cast(args[1]);
+  int length = array_shaders->Get(String::New("length"))->ToObject()->Uint32Value();
+  GLuint shaders[length];
+  for (int i=0; i<length; i++) {
+    shaders[i] = array_shaders->Get(i)->ToObject()->Uint32Value();
+  }
+
+  GLenum binaryformat = args[2]->Int32Value();
+
+  // buffer
+  Local<Object> obj_binary = args[0]->ToObject();
+  if (obj_binary->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
+    
+  }
+  const GLvoid* binary = static_cast<const GLvoid*>(obj_binary->GetIndexedPropertiesExternalArrayData());
+
+  GLsizei length = args[4]->Int32Value();
+
+  glShaderBinary(n, shaders, binaryformat, binary, length);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlShaderSource(const Arguments& args) {
   HandleScope scope;
 
+  GLuint shader = args[0]->Uint32Value();
+  GLsizei count = args[1]->Int32Value();
+  v8::String::Utf8Value string_const*(args[2]);
+  const GLchar* const* = *string_const*;
+
+  glShaderSource(shader, count, const*, const, length);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlStencilFunc(const Arguments& args) {
   HandleScope scope;
 
+  GLenum func = args[0]->Int32Value();
+  GLint ref = args[1]->Int32Value();
+  GLuint mask = args[2]->Uint32Value();
+
+  glStencilFunc(func, ref, mask);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlStencilFuncSeparate(const Arguments& args) {
   HandleScope scope;
 
+  GLenum face = args[0]->Int32Value();
+  GLenum func = args[1]->Int32Value();
+  GLint ref = args[2]->Int32Value();
+  GLuint mask = args[3]->Uint32Value();
+
+  glStencilFuncSeparate(face, func, ref, mask);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlStencilMask(const Arguments& args) {
   HandleScope scope;
 
+  GLuint mask = args[0]->Uint32Value();
+
+  glStencilMask(mask);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlStencilMaskSeparate(const Arguments& args) {
   HandleScope scope;
 
+  GLenum face = args[0]->Int32Value();
+  GLuint mask = args[1]->Uint32Value();
+
+  glStencilMaskSeparate(face, mask);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlStencilOp(const Arguments& args) {
   HandleScope scope;
 
+  GLenum fail = args[0]->Int32Value();
+  GLenum zfail = args[1]->Int32Value();
+  GLenum zpass = args[2]->Int32Value();
+
+  glStencilOp(fail, zfail, zpass);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlStencilOpSeparate(const Arguments& args) {
   HandleScope scope;
 
+  GLenum face = args[0]->Int32Value();
+  GLenum fail = args[1]->Int32Value();
+  GLenum zfail = args[2]->Int32Value();
+  GLenum zpass = args[3]->Int32Value();
+
+  glStencilOpSeparate(face, fail, zfail, zpass);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlTexImage2D(const Arguments& args) {
   HandleScope scope;
 
+  GLenum target = args[0]->Int32Value();
+  GLint level = args[1]->Int32Value();
+  GLint internalformat = args[2]->Int32Value();
+  GLsizei width = args[3]->Int32Value();
+  GLsizei height = args[4]->Int32Value();
+  GLint border = args[5]->Int32Value();
+  GLenum format = args[6]->Int32Value();
+  GLenum type = args[7]->Int32Value();
+
+  // buffer
+  Local<Object> obj_pixels = args[0]->ToObject();
+  if (obj_pixels->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
+    
+  }
+  const GLvoid* pixels = static_cast<const GLvoid*>(obj_pixels->GetIndexedPropertiesExternalArrayData());
+
+
+  glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlTexParameterf(const Arguments& args) {
   HandleScope scope;
 
+  GLenum target = args[0]->Int32Value();
+  GLenum pname = args[1]->Int32Value();
+  GLfloat param = args[2]->NumberValue();
+
+  glTexParameterf(target, pname, param);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlTexParameterfv(const Arguments& args) {
   HandleScope scope;
 
+  GLenum target = args[0]->Int32Value();
+  GLenum pname = args[1]->Int32Value();
+
+  // buffer
+  Local<Object> obj_params = args[0]->ToObject();
+  if (obj_params->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
+    
+  }
+  const GLfloat* params = static_cast<const GLfloat*>(obj_params->GetIndexedPropertiesExternalArrayData());
+
+
+  glTexParameterfv(target, pname, params);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlTexParameteri(const Arguments& args) {
   HandleScope scope;
 
+  GLenum target = args[0]->Int32Value();
+  GLenum pname = args[1]->Int32Value();
+  GLint param = args[2]->Int32Value();
+
+  glTexParameteri(target, pname, param);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlTexParameteriv(const Arguments& args) {
   HandleScope scope;
 
+  GLenum target = args[0]->Int32Value();
+  GLenum pname = args[1]->Int32Value();
+
+  glTexParameteriv(target, pname, params);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlTexSubImage2D(const Arguments& args) {
   HandleScope scope;
 
+  GLenum target = args[0]->Int32Value();
+  GLint level = args[1]->Int32Value();
+  GLint xoffset = args[2]->Int32Value();
+  GLint yoffset = args[3]->Int32Value();
+  GLsizei width = args[4]->Int32Value();
+  GLsizei height = args[5]->Int32Value();
+  GLenum format = args[6]->Int32Value();
+  GLenum type = args[7]->Int32Value();
+
+  // buffer
+  Local<Object> obj_pixels = args[0]->ToObject();
+  if (obj_pixels->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
+    
+  }
+  const GLvoid* pixels = static_cast<const GLvoid*>(obj_pixels->GetIndexedPropertiesExternalArrayData());
+
+
+  glTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlUniform1f(const Arguments& args) {
   HandleScope scope;
 
+  GLint location = args[0]->Int32Value();
+  GLfloat x = args[1]->NumberValue();
+
+  glUniform1f(location, x);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlUniform1fv(const Arguments& args) {
   HandleScope scope;
 
+  GLint location = args[0]->Int32Value();
+  GLsizei count = args[1]->Int32Value();
+
+  // buffer
+  Local<Object> obj_v = args[0]->ToObject();
+  if (obj_v->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
+    
+  }
+  const GLfloat* v = static_cast<const GLfloat*>(obj_v->GetIndexedPropertiesExternalArrayData());
+
+
+  glUniform1fv(location, count, v);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlUniform1i(const Arguments& args) {
   HandleScope scope;
 
+  GLint location = args[0]->Int32Value();
+  GLint x = args[1]->Int32Value();
+
+  glUniform1i(location, x);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlUniform1iv(const Arguments& args) {
   HandleScope scope;
 
+  GLint location = args[0]->Int32Value();
+  GLsizei count = args[1]->Int32Value();
+
+  glUniform1iv(location, count, v);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlUniform2f(const Arguments& args) {
   HandleScope scope;
 
+  GLint location = args[0]->Int32Value();
+  GLfloat x = args[1]->NumberValue();
+  GLfloat y = args[2]->NumberValue();
+
+  glUniform2f(location, x, y);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlUniform2fv(const Arguments& args) {
   HandleScope scope;
 
+  GLint location = args[0]->Int32Value();
+  GLsizei count = args[1]->Int32Value();
+
+  // buffer
+  Local<Object> obj_v = args[0]->ToObject();
+  if (obj_v->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
+    
+  }
+  const GLfloat* v = static_cast<const GLfloat*>(obj_v->GetIndexedPropertiesExternalArrayData());
+
+
+  glUniform2fv(location, count, v);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlUniform2i(const Arguments& args) {
   HandleScope scope;
 
+  GLint location = args[0]->Int32Value();
+  GLint x = args[1]->Int32Value();
+  GLint y = args[2]->Int32Value();
+
+  glUniform2i(location, x, y);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlUniform2iv(const Arguments& args) {
   HandleScope scope;
 
+  GLint location = args[0]->Int32Value();
+  GLsizei count = args[1]->Int32Value();
+
+  glUniform2iv(location, count, v);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlUniform3f(const Arguments& args) {
   HandleScope scope;
 
+  GLint location = args[0]->Int32Value();
+  GLfloat x = args[1]->NumberValue();
+  GLfloat y = args[2]->NumberValue();
+  GLfloat z = args[3]->NumberValue();
+
+  glUniform3f(location, x, y, z);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlUniform3fv(const Arguments& args) {
   HandleScope scope;
 
+  GLint location = args[0]->Int32Value();
+  GLsizei count = args[1]->Int32Value();
+
+  // buffer
+  Local<Object> obj_v = args[0]->ToObject();
+  if (obj_v->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
+    
+  }
+  const GLfloat* v = static_cast<const GLfloat*>(obj_v->GetIndexedPropertiesExternalArrayData());
+
+
+  glUniform3fv(location, count, v);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlUniform3i(const Arguments& args) {
   HandleScope scope;
 
+  GLint location = args[0]->Int32Value();
+  GLint x = args[1]->Int32Value();
+  GLint y = args[2]->Int32Value();
+  GLint z = args[3]->Int32Value();
+
+  glUniform3i(location, x, y, z);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlUniform3iv(const Arguments& args) {
   HandleScope scope;
 
+  GLint location = args[0]->Int32Value();
+  GLsizei count = args[1]->Int32Value();
+
+  glUniform3iv(location, count, v);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlUniform4f(const Arguments& args) {
   HandleScope scope;
 
+  GLint location = args[0]->Int32Value();
+  GLfloat x = args[1]->NumberValue();
+  GLfloat y = args[2]->NumberValue();
+  GLfloat z = args[3]->NumberValue();
+  GLfloat w = args[4]->NumberValue();
+
+  glUniform4f(location, x, y, z, w);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlUniform4fv(const Arguments& args) {
   HandleScope scope;
 
+  GLint location = args[0]->Int32Value();
+  GLsizei count = args[1]->Int32Value();
+
+  // buffer
+  Local<Object> obj_v = args[0]->ToObject();
+  if (obj_v->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
+    
+  }
+  const GLfloat* v = static_cast<const GLfloat*>(obj_v->GetIndexedPropertiesExternalArrayData());
+
+
+  glUniform4fv(location, count, v);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlUniform4i(const Arguments& args) {
   HandleScope scope;
 
+  GLint location = args[0]->Int32Value();
+  GLint x = args[1]->Int32Value();
+  GLint y = args[2]->Int32Value();
+  GLint z = args[3]->Int32Value();
+  GLint w = args[4]->Int32Value();
+
+  glUniform4i(location, x, y, z, w);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlUniform4iv(const Arguments& args) {
   HandleScope scope;
 
+  GLint location = args[0]->Int32Value();
+  GLsizei count = args[1]->Int32Value();
+
+  glUniform4iv(location, count, v);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlUniformMatrix2fv(const Arguments& args) {
   HandleScope scope;
 
+  GLint location = args[0]->Int32Value();
+  GLsizei count = args[1]->Int32Value();
+  GLboolean transpose = (GLboolean)args[2]->Int32Value();
+
+  // buffer
+  Local<Object> obj_value = args[0]->ToObject();
+  if (obj_value->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
+    
+  }
+  const GLfloat* value = static_cast<const GLfloat*>(obj_value->GetIndexedPropertiesExternalArrayData());
+
+
+  glUniformMatrix2fv(location, count, transpose, value);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlUniformMatrix3fv(const Arguments& args) {
   HandleScope scope;
 
+  GLint location = args[0]->Int32Value();
+  GLsizei count = args[1]->Int32Value();
+  GLboolean transpose = (GLboolean)args[2]->Int32Value();
+
+  // buffer
+  Local<Object> obj_value = args[0]->ToObject();
+  if (obj_value->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
+    
+  }
+  const GLfloat* value = static_cast<const GLfloat*>(obj_value->GetIndexedPropertiesExternalArrayData());
+
+
+  glUniformMatrix3fv(location, count, transpose, value);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlUniformMatrix4fv(const Arguments& args) {
   HandleScope scope;
 
+  GLint location = args[0]->Int32Value();
+  GLsizei count = args[1]->Int32Value();
+  GLboolean transpose = (GLboolean)args[2]->Int32Value();
+
+  // buffer
+  Local<Object> obj_value = args[0]->ToObject();
+  if (obj_value->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
+    
+  }
+  const GLfloat* value = static_cast<const GLfloat*>(obj_value->GetIndexedPropertiesExternalArrayData());
+
+
+  glUniformMatrix4fv(location, count, transpose, value);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlUseProgram(const Arguments& args) {
   HandleScope scope;
 
+  GLuint program = args[0]->Uint32Value();
+
+  glUseProgram(program);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlValidateProgram(const Arguments& args) {
   HandleScope scope;
 
+  GLuint program = args[0]->Uint32Value();
+
+  glValidateProgram(program);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlVertexAttrib1f(const Arguments& args) {
   HandleScope scope;
 
+  GLuint indx = args[0]->Uint32Value();
+  GLfloat x = args[1]->NumberValue();
+
+  glVertexAttrib1f(indx, x);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlVertexAttrib1fv(const Arguments& args) {
   HandleScope scope;
 
+  GLuint indx = args[0]->Uint32Value();
+
+  // buffer
+  Local<Object> obj_values = args[0]->ToObject();
+  if (obj_values->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
+    
+  }
+  const GLfloat* values = static_cast<const GLfloat*>(obj_values->GetIndexedPropertiesExternalArrayData());
+
+
+  glVertexAttrib1fv(indx, values);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlVertexAttrib2f(const Arguments& args) {
   HandleScope scope;
 
+  GLuint indx = args[0]->Uint32Value();
+  GLfloat x = args[1]->NumberValue();
+  GLfloat y = args[2]->NumberValue();
+
+  glVertexAttrib2f(indx, x, y);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlVertexAttrib2fv(const Arguments& args) {
   HandleScope scope;
 
+  GLuint indx = args[0]->Uint32Value();
+
+  // buffer
+  Local<Object> obj_values = args[0]->ToObject();
+  if (obj_values->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
+    
+  }
+  const GLfloat* values = static_cast<const GLfloat*>(obj_values->GetIndexedPropertiesExternalArrayData());
+
+
+  glVertexAttrib2fv(indx, values);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlVertexAttrib3f(const Arguments& args) {
   HandleScope scope;
 
+  GLuint indx = args[0]->Uint32Value();
+  GLfloat x = args[1]->NumberValue();
+  GLfloat y = args[2]->NumberValue();
+  GLfloat z = args[3]->NumberValue();
+
+  glVertexAttrib3f(indx, x, y, z);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlVertexAttrib3fv(const Arguments& args) {
   HandleScope scope;
 
+  GLuint indx = args[0]->Uint32Value();
+
+  // buffer
+  Local<Object> obj_values = args[0]->ToObject();
+  if (obj_values->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
+    
+  }
+  const GLfloat* values = static_cast<const GLfloat*>(obj_values->GetIndexedPropertiesExternalArrayData());
+
+
+  glVertexAttrib3fv(indx, values);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlVertexAttrib4f(const Arguments& args) {
   HandleScope scope;
 
+  GLuint indx = args[0]->Uint32Value();
+  GLfloat x = args[1]->NumberValue();
+  GLfloat y = args[2]->NumberValue();
+  GLfloat z = args[3]->NumberValue();
+  GLfloat w = args[4]->NumberValue();
+
+  glVertexAttrib4f(indx, x, y, z, w);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlVertexAttrib4fv(const Arguments& args) {
   HandleScope scope;
 
+  GLuint indx = args[0]->Uint32Value();
+
+  // buffer
+  Local<Object> obj_values = args[0]->ToObject();
+  if (obj_values->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
+    
+  }
+  const GLfloat* values = static_cast<const GLfloat*>(obj_values->GetIndexedPropertiesExternalArrayData());
+
+
+  glVertexAttrib4fv(indx, values);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlVertexAttribPointer(const Arguments& args) {
   HandleScope scope;
 
+  GLuint indx = args[0]->Uint32Value();
+  GLint size = args[1]->Int32Value();
+  GLenum type = args[2]->Int32Value();
+  GLboolean normalized = (GLboolean)args[3]->Int32Value();
+  GLsizei stride = args[4]->Int32Value();
+
+  // buffer
+  Local<Object> obj_ptr = args[0]->ToObject();
+  if (obj_ptr->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
+    
+  }
+  const GLvoid* ptr = static_cast<const GLvoid*>(obj_ptr->GetIndexedPropertiesExternalArrayData());
+
+
+  glVertexAttribPointer(indx, size, type, normalized, stride, ptr);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlViewport(const Arguments& args) {
   HandleScope scope;
 
+  GLint x = args[0]->Int32Value();
+  GLint y = args[1]->Int32Value();
+  GLsizei width = args[2]->Int32Value();
+  GLsizei height = args[3]->Int32Value();
+
+  glViewport(x, y, width, height);
   return scope.Close(Undefined());
 }
 void init(Handle<Object> target) {

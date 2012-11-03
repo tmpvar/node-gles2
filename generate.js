@@ -43,9 +43,103 @@ get('http://www.khronos.org/registry/gles/api/2.0/gl2.h', function(err, res, hea
       signature.arguments = {};
       signature.list = [];
 
+      while (parts.length) {
+        var argType = parts.shift();
+        if (argType === 'const') {
+          argType += ' ' + parts.shift();
+        } else if (argType === '') {
+          continue;
+        } else if (parts.length === 0 && argType === 'void') {
+          break;
+        }
+
+        var argName = parts.shift();
+        if (argName === '') {
+         continue
+        }
+
+        if (!argName || !argType) {
+          console.log(signature, parts.length);
+          throw new Error(argName + ' : ' + argType + ' : ' + fn);
+        }
+        signature.arguments[argName] = argType;
+        signature.list.push(argName);
+      }
+
+
       cc.push('Handle<Value> ' + upper  + '(const Arguments& args) {');
       cc.push('  HandleScope scope;');
       cc.push('');
+
+      // collect arguments
+      signature.list.forEach(function(name, i) {
+
+        var type = this.arguments[name];
+
+        switch (type) {
+          case 'GLenum':
+          case 'GLint':
+          case 'GLsizei':
+          case 'GLbitfield':
+            cc.push('  ' + type + ' ' + name + ' = args[' + i + ']->Int32Value();')
+          break;
+
+          case 'GLboolean':
+            cc.push('  ' + type + ' ' + name + ' = (GLboolean)args[' + i + ']->Int32Value();')
+          break;
+
+          case 'GLuint':
+          case 'GLsizeiptr':
+          case 'GLintptr':
+            cc.push('  ' + type + ' ' + name + ' = args[' + i + ']->Uint32Value();')
+          break;
+
+          case 'GLfloat':
+          case 'GLclampf':
+            cc.push('  ' + type + ' ' + name + ' = args[' + i + ']->NumberValue();')
+          break;
+
+          case 'const GLchar*':
+            cc.push('  v8::String::Utf8Value string_' + name + '(args[' + i + ']);')
+            cc.push('  ' + type + ' ' + name + ' = *string_' + name + ';');
+          break;
+
+          case 'const GLvoid*':
+          case 'const GLfloat*':
+            cc.push('');
+            cc.push('  // buffer');
+            cc.push('  Local<Object> obj_' + name + ' = args[0]->ToObject();');
+            cc.push('  if (obj_' + name + '->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {');
+            cc.push('    ');
+            cc.push('  }');
+            cc.push('  ' + type + ' '+ name + ' = static_cast<' + type + '>(obj_' + name + '->GetIndexedPropertiesExternalArrayData());');
+            cc.push('');
+          break;
+
+
+          case 'const GLuint*':
+            cc.push('');
+            cc.push('  // list of Gluints');
+            cc.push('  Handle<Array> array_' + name + ' = Handle<Array>::Cast(args[' + i + ']);');
+            cc.push('  int length = array_' + name + '->Get(String::New("length"))->ToObject()->Uint32Value();');
+            cc.push('  ' + type.replace('*', '').replace('const ', '') + ' ' + name + '[length];');
+            cc.push('  for (int i=0; i<length; i++) {');
+            cc.push('    ' + name + '[i] = array_' + name + '->Get(i)->ToObject()->Uint32Value();');
+            cc.push('  }');
+            cc.push('');
+          break;
+
+        }
+
+      }.bind(signature));
+
+      cc.push('');
+
+      if (signature.returnType === 'void') {
+        cc.push('  ' + signature.name + '(' + Object.keys(signature.arguments).join(', ') + ');');
+      }
+
+
 
       init.push('  SetMethod(target, "' + fnName + '", ' + upper + ');');
 
@@ -54,65 +148,6 @@ get('http://www.khronos.org/registry/gles/api/2.0/gl2.h', function(err, res, hea
       cc.push('');
   });
 
-
-/*
-
-    if (signature.returnType === 'const') {
-      signature.returnType += ' ' + parts.shift();
-    }
-
-
-
-    while (parts.length) {
-      var argType = parts.shift();
-      if (argType === 'const') {
-        argType += ' ' + parts.shift();
-      } else if (argType === '') {
-        continue;
-      } else if (parts.length === 0 && argType === 'void') {
-        break;
-      }
-
-      var argName = parts.shift();
-      if (argName === '') {
-       continue
-      }
-
-
-      if (!argName || !argType) {
-        console.log(signature, parts.length);
-        throw new Error(argName + ' : ' + argType + ' : ' + fn);
-      }
-      signature.arguments[argName] = argType;
-      signature.list.push(argName);
-    }
-
-
-    signature.deploy = function() {
-      var ret = [''];
-      // collect arguments
-      this.list.forEach(function(name, i) {
-
-        var type = this.arguments[name];
-
-        switch (type) {
-          case 'GLenum':
-          case 'GLint':
-            ret.push('  ' + type + ' ' + name + ' = args[' + i + ']->Int32Value();')
-          break;
-          case 'GLfloat':
-            ret.push('  ' + type + ' ' + name + ' = args[' + i + ']->NumberValue();')
-          break;
-
-        }
-
-      }.bind(this));
-
-      ret.push('');
-
-      return ret.join('\n');
-    }
-*/
 
 
   // CONSTANTS
