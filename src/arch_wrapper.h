@@ -8,7 +8,6 @@
                 static_cast<v8::PropertyAttribute>(                       \
                     v8::ReadOnly|v8::DontDelete))
 
-
   #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
     #include <OpenGLES/ES2/gl.h>
     #include <OpenGLES/ES2/glext.h>

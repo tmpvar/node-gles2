@@ -2,6 +2,10 @@
 var get = require('request').get;
 var fs = require('fs');
 
+function X(type, name) {
+  console.log('UNCAUGHT', type, name);
+}
+
 get('http://www.khronos.org/registry/gles/api/2.0/gl2.h', function(err, res, headerString) {
 
   var cc = [
@@ -24,7 +28,6 @@ get('http://www.khronos.org/registry/gles/api/2.0/gl2.h', function(err, res, hea
     'NODE_MODULE(gles2, init)',
   ];
 
-
   // Methods
   init.push('');
   init.push('  // Methods')
@@ -34,9 +37,7 @@ get('http://www.khronos.org/registry/gles/api/2.0/gl2.h', function(err, res, hea
 
       signature.returnType = parts.shift();
       if ( signature.returnType === 'const') {
-        console.log('here');
          signature.returnType += ' ' + parts.shift();
-         console.log(signature.returnType, parts);
       }
 
       var fnName = signature.name = parts.shift();
@@ -153,32 +154,52 @@ get('http://www.khronos.org/registry/gles/api/2.0/gl2.h', function(err, res, hea
 
           case 'GLuint*':
             // handle the glGen* cases
-            if (!this.arguments.length && !this.arguments.count && this.arguments.n) {
+            if (!this.arguments.length && (this.arguments.maxcount || this.arguments.n)) {
+
+              var arg = this.arguments.maxcount ? 'maxcount' : 'n';
               cc.push('');
-              cc.push('  Handle<Array> ret = Array::New(n);');
+              cc.push('  Handle<Array> ret = Array::New(' + arg + ');');
               cc.push('  ' + type + ' ' + name + ';');
 
               var out = [''];
-              out.push('  for (int i_' + i + '; i_' + i + ' < n; i_' + i + '++) {');
+              out.push('  for (int i_' + i + '; i_' + i + ' < ' + arg + '; i_' + i + '++) {');
               out.push('    ret->Set(Number::New(i_' + i + '), Number::New(' + name + '[i_' + i + ']));');
               out.push('  }');
               out.push('  return scope.Close(ret);');
 
               skipReturn = out.join('\n')
+            } else {
+              X(type, name);
             }
           break;
 
           case 'GLint*':
-          case 'Glfloat*':
+          case 'GLfloat*':
+          case 'GLsizei*':
+          case 'GLenum*':
+            cc.push('  ' + type + ' ' + name + ';');
+            skipReturn = '\n  return scope.Close(Number::New(*' + name + '));';
+          break;
 
-            if (!this.arguments.length && !this.arguments.count && this.arguments.n) {
+          case 'GLboolean*':
+            if (!this.arguments.length && !this.arguments.count) {
               cc.push('  ' + type + ' ' + name + ';');
-
-              var out = [''];
-              out.push('  return scope.Close(Number::New(' + name + '));');
-              skipReturn = out.join('\n')
+              skipReturn = '\n  return scope.Close(Boolean::New(*' + name + '));';
+            } else {
+              X(type, name);
             }
           break;
+
+
+          case 'GLchar*':
+            if (this.arguments.bufsize) {
+              cc.push('  ' + type.replace('*','') + ' ' + name + '[bufsize];');
+              skipReturn = '\n  return scope.Close(String::New(' + name + '));';
+            } else {
+              X(type, name);
+            }
+          break;
+
 
           case 'GLvoid*':
             if (this.name === 'glReadPixels') {
@@ -221,12 +242,17 @@ get('http://www.khronos.org/registry/gles/api/2.0/gl2.h', function(err, res, hea
                 '  Local<Function> bufferConstructor = v8::Local<v8::Function>::Cast(globalObj->Get(v8::String::New("Buffer")));',
                 '  Handle<Value> constructorArgs[3] = { buffer->handle_, v8::Integer::New(Buffer::Length(buffer)), v8::Integer::New(0) };',
                 '  Local<Object> actualBuffer = bufferConstructor->NewInstance(3, constructorArgs);',
+                '',
+                '  return scope.Close(actualBuffer);'
               ];
 
-              out.push('  return scope.Close(actualBuffer);');
               skipReturn = out.join('\n')
             }
 
+          break;
+
+          default:
+            X(type, name);
           break;
 
         }

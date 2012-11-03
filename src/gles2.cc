@@ -671,9 +671,14 @@ Handle<Value> GlGetActiveAttrib(const Arguments& args) {
   GLuint program = args[0]->Uint32Value();
   GLuint index = args[1]->Uint32Value();
   GLsizei bufsize = args[2]->Int32Value();
+  GLsizei* length;
+  GLint* size;
+  GLenum* type;
+  GLchar name[bufsize];
 
   glGetActiveAttrib(program, index, bufsize, length, size, type, name);
-  return scope.Close(Undefined());
+
+  return scope.Close(String::New(name));
 }
 
 Handle<Value> GlGetActiveUniform(const Arguments& args) {
@@ -682,9 +687,14 @@ Handle<Value> GlGetActiveUniform(const Arguments& args) {
   GLuint program = args[0]->Uint32Value();
   GLuint index = args[1]->Uint32Value();
   GLsizei bufsize = args[2]->Int32Value();
+  GLsizei* length;
+  GLint* size;
+  GLenum* type;
+  GLchar name[bufsize];
 
   glGetActiveUniform(program, index, bufsize, length, size, type, name);
-  return scope.Close(Undefined());
+
+  return scope.Close(String::New(name));
 }
 
 Handle<Value> GlGetAttachedShaders(const Arguments& args) {
@@ -692,9 +702,17 @@ Handle<Value> GlGetAttachedShaders(const Arguments& args) {
 
   GLuint program = args[0]->Uint32Value();
   GLsizei maxcount = args[1]->Int32Value();
+  GLsizei* count;
+
+  Handle<Array> ret = Array::New(maxcount);
+  GLuint* shaders;
 
   glGetAttachedShaders(program, maxcount, count, shaders);
-  return scope.Close(Undefined());
+
+  for (int i_3; i_3 < maxcount; i_3++) {
+    ret->Set(Number::New(i_3), Number::New(shaders[i_3]));
+  }
+  return scope.Close(ret);
 }
 
 Handle<Value> GlGetAttribLocation(const Arguments& args) {
@@ -712,9 +730,11 @@ Handle<Value> GlGetBooleanv(const Arguments& args) {
   HandleScope scope;
 
   GLenum pname = args[0]->Int32Value();
+  GLboolean* params;
 
   glGetBooleanv(pname, params);
-  return scope.Close(Undefined());
+
+  return scope.Close(Boolean::New(*params));
 }
 
 Handle<Value> GlGetBufferParameteriv(const Arguments& args) {
@@ -722,9 +742,11 @@ Handle<Value> GlGetBufferParameteriv(const Arguments& args) {
 
   GLenum target = args[0]->Int32Value();
   GLenum pname = args[1]->Int32Value();
+  GLint* params;
 
   glGetBufferParameteriv(target, pname, params);
-  return scope.Close(Undefined());
+
+  return scope.Close(Number::New(*params));
 }
 
 Handle<Value> GlGetError(const Arguments& args) {
@@ -739,9 +761,11 @@ Handle<Value> GlGetFloatv(const Arguments& args) {
   HandleScope scope;
 
   GLenum pname = args[0]->Int32Value();
+  GLfloat* params;
 
   glGetFloatv(pname, params);
-  return scope.Close(Undefined());
+
+  return scope.Close(Number::New(*params));
 }
 
 Handle<Value> GlGetFramebufferAttachmentParameteriv(const Arguments& args) {
@@ -750,18 +774,22 @@ Handle<Value> GlGetFramebufferAttachmentParameteriv(const Arguments& args) {
   GLenum target = args[0]->Int32Value();
   GLenum attachment = args[1]->Int32Value();
   GLenum pname = args[2]->Int32Value();
+  GLint* params;
 
   glGetFramebufferAttachmentParameteriv(target, attachment, pname, params);
-  return scope.Close(Undefined());
+
+  return scope.Close(Number::New(*params));
 }
 
 Handle<Value> GlGetIntegerv(const Arguments& args) {
   HandleScope scope;
 
   GLenum pname = args[0]->Int32Value();
+  GLint* params;
 
   glGetIntegerv(pname, params);
-  return scope.Close(Undefined());
+
+  return scope.Close(Number::New(*params));
 }
 
 Handle<Value> GlGetProgramiv(const Arguments& args) {
@@ -769,9 +797,11 @@ Handle<Value> GlGetProgramiv(const Arguments& args) {
 
   GLuint program = args[0]->Uint32Value();
   GLenum pname = args[1]->Int32Value();
+  GLint* params;
 
   glGetProgramiv(program, pname, params);
-  return scope.Close(Undefined());
+
+  return scope.Close(Number::New(*params));
 }
 
 Handle<Value> GlGetProgramInfoLog(const Arguments& args) {
@@ -779,9 +809,12 @@ Handle<Value> GlGetProgramInfoLog(const Arguments& args) {
 
   GLuint program = args[0]->Uint32Value();
   GLsizei bufsize = args[1]->Int32Value();
+  GLsizei* length;
+  GLchar infolog[bufsize];
 
   glGetProgramInfoLog(program, bufsize, length, infolog);
-  return scope.Close(Undefined());
+
+  return scope.Close(String::New(infolog));
 }
 
 Handle<Value> GlGetRenderbufferParameteriv(const Arguments& args) {
@@ -789,9 +822,11 @@ Handle<Value> GlGetRenderbufferParameteriv(const Arguments& args) {
 
   GLenum target = args[0]->Int32Value();
   GLenum pname = args[1]->Int32Value();
+  GLint* params;
 
   glGetRenderbufferParameteriv(target, pname, params);
-  return scope.Close(Undefined());
+
+  return scope.Close(Number::New(*params));
 }
 
 Handle<Value> GlGetShaderiv(const Arguments& args) {
@@ -799,9 +834,11 @@ Handle<Value> GlGetShaderiv(const Arguments& args) {
 
   GLuint shader = args[0]->Uint32Value();
   GLenum pname = args[1]->Int32Value();
+  GLint* params;
 
   glGetShaderiv(shader, pname, params);
-  return scope.Close(Undefined());
+
+  return scope.Close(Number::New(*params));
 }
 
 Handle<Value> GlGetShaderInfoLog(const Arguments& args) {
@@ -809,9 +846,12 @@ Handle<Value> GlGetShaderInfoLog(const Arguments& args) {
 
   GLuint shader = args[0]->Uint32Value();
   GLsizei bufsize = args[1]->Int32Value();
+  GLsizei* length;
+  GLchar infolog[bufsize];
 
   glGetShaderInfoLog(shader, bufsize, length, infolog);
-  return scope.Close(Undefined());
+
+  return scope.Close(String::New(infolog));
 }
 
 Handle<Value> GlGetShaderPrecisionFormat(const Arguments& args) {
@@ -819,9 +859,12 @@ Handle<Value> GlGetShaderPrecisionFormat(const Arguments& args) {
 
   GLenum shadertype = args[0]->Int32Value();
   GLenum precisiontype = args[1]->Int32Value();
+  GLint* range;
+  GLint* precision;
 
   glGetShaderPrecisionFormat(shadertype, precisiontype, range, precision);
-  return scope.Close(Undefined());
+
+  return scope.Close(Number::New(*precision));
 }
 
 Handle<Value> GlGetShaderSource(const Arguments& args) {
@@ -829,9 +872,12 @@ Handle<Value> GlGetShaderSource(const Arguments& args) {
 
   GLuint shader = args[0]->Uint32Value();
   GLsizei bufsize = args[1]->Int32Value();
+  GLsizei* length;
+  GLchar source[bufsize];
 
   glGetShaderSource(shader, bufsize, length, source);
-  return scope.Close(Undefined());
+
+  return scope.Close(String::New(source));
 }
 
 Handle<Value> GlGetString(const Arguments& args) {
@@ -848,9 +894,11 @@ Handle<Value> GlGetTexParameterfv(const Arguments& args) {
 
   GLenum target = args[0]->Int32Value();
   GLenum pname = args[1]->Int32Value();
+  GLfloat* params;
 
   glGetTexParameterfv(target, pname, params);
-  return scope.Close(Undefined());
+
+  return scope.Close(Number::New(*params));
 }
 
 Handle<Value> GlGetTexParameteriv(const Arguments& args) {
@@ -858,9 +906,11 @@ Handle<Value> GlGetTexParameteriv(const Arguments& args) {
 
   GLenum target = args[0]->Int32Value();
   GLenum pname = args[1]->Int32Value();
+  GLint* params;
 
   glGetTexParameteriv(target, pname, params);
-  return scope.Close(Undefined());
+
+  return scope.Close(Number::New(*params));
 }
 
 Handle<Value> GlGetUniformfv(const Arguments& args) {
@@ -868,9 +918,11 @@ Handle<Value> GlGetUniformfv(const Arguments& args) {
 
   GLuint program = args[0]->Uint32Value();
   GLint location = args[1]->Int32Value();
+  GLfloat* params;
 
   glGetUniformfv(program, location, params);
-  return scope.Close(Undefined());
+
+  return scope.Close(Number::New(*params));
 }
 
 Handle<Value> GlGetUniformiv(const Arguments& args) {
@@ -878,9 +930,11 @@ Handle<Value> GlGetUniformiv(const Arguments& args) {
 
   GLuint program = args[0]->Uint32Value();
   GLint location = args[1]->Int32Value();
+  GLint* params;
 
   glGetUniformiv(program, location, params);
-  return scope.Close(Undefined());
+
+  return scope.Close(Number::New(*params));
 }
 
 Handle<Value> GlGetUniformLocation(const Arguments& args) {
@@ -899,9 +953,11 @@ Handle<Value> GlGetVertexAttribfv(const Arguments& args) {
 
   GLuint index = args[0]->Uint32Value();
   GLenum pname = args[1]->Int32Value();
+  GLfloat* params;
 
   glGetVertexAttribfv(index, pname, params);
-  return scope.Close(Undefined());
+
+  return scope.Close(Number::New(*params));
 }
 
 Handle<Value> GlGetVertexAttribiv(const Arguments& args) {
@@ -909,9 +965,11 @@ Handle<Value> GlGetVertexAttribiv(const Arguments& args) {
 
   GLuint index = args[0]->Uint32Value();
   GLenum pname = args[1]->Int32Value();
+  GLint* params;
 
   glGetVertexAttribiv(index, pname, params);
-  return scope.Close(Undefined());
+
+  return scope.Close(Number::New(*params));
 }
 
 Handle<Value> GlGetVertexAttribPointerv(const Arguments& args) {
@@ -1083,6 +1141,7 @@ Handle<Value> GlReadPixels(const Arguments& args) {
   Local<Function> bufferConstructor = v8::Local<v8::Function>::Cast(globalObj->Get(v8::String::New("Buffer")));
   Handle<Value> constructorArgs[3] = { buffer->handle_, v8::Integer::New(Buffer::Length(buffer)), v8::Integer::New(0) };
   Local<Object> actualBuffer = bufferConstructor->NewInstance(3, constructorArgs);
+
   return scope.Close(actualBuffer);
 }
 
