@@ -8,6 +8,10 @@
                 static_cast<v8::PropertyAttribute>(                       \
                     v8::ReadOnly|v8::DontDelete))
 
+  void free_buffer(char *data, void *hint) {
+    free(data);
+  }
+
   #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
     #include <OpenGLES/ES2/gl.h>
     #include <OpenGLES/ES2/glext.h>

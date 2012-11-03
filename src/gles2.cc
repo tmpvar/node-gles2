@@ -975,13 +975,9 @@ Handle<Value> GlGetVertexAttribiv(const Arguments& args) {
 Handle<Value> GlGetVertexAttribPointerv(const Arguments& args) {
   HandleScope scope;
 
-  GLuint index = args[0]->Uint32Value();
-  GLenum pname = args[1]->Int32Value();
-
-  glGetVertexAttribPointerv(index, pname, pointer);
-  return scope.Close(Undefined());
+   ThrowException(Exception::TypeError(String::New("glGetVertexAttribPointerv is not implemented please raise an issue https://github.com/tmpvar/node-gles2/issues")));
+   return scope.Close(Undefined());
 }
-
 Handle<Value> GlHint(const Arguments& args) {
   HandleScope scope;
 
@@ -1135,8 +1131,7 @@ Handle<Value> GlReadPixels(const Arguments& args) {
 
   buffer_length *= bytesPerComponent * pixelComponents;
 
-  Buffer *buffer = Buffer::New(buffer_length);
-  memcpy(Buffer::Data(buffer), pixels, buffer_length);
+  Buffer *buffer = Buffer::New((char *)&pixels, buffer_length, free_buffer, 0);
   Local<v8::Object> globalObj = v8::Context::GetCurrent()->Global();
   Local<Function> bufferConstructor = v8::Local<v8::Function>::Cast(globalObj->Get(v8::String::New("Buffer")));
   Handle<Value> constructorArgs[3] = { buffer->handle_, v8::Integer::New(Buffer::Length(buffer)), v8::Integer::New(0) };
@@ -1975,7 +1970,6 @@ void init(Handle<Object> target) {
   SetMethod(target, "glGetUniformLocation", GlGetUniformLocation);
   SetMethod(target, "glGetVertexAttribfv", GlGetVertexAttribfv);
   SetMethod(target, "glGetVertexAttribiv", GlGetVertexAttribiv);
-  SetMethod(target, "glGetVertexAttribPointerv", GlGetVertexAttribPointerv);
   SetMethod(target, "glHint", GlHint);
   SetMethod(target, "glIsBuffer", GlIsBuffer);
   SetMethod(target, "glIsEnabled", GlIsEnabled);

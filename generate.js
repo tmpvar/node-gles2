@@ -45,6 +45,16 @@ get('http://www.khronos.org/registry/gles/api/2.0/gl2.h', function(err, res, hea
       signature.arguments = {};
       signature.list = [];
 
+      if (fnName === 'glGetVertexAttribPointerv') {
+        cc.push('Handle<Value> ' + upper  + '(const Arguments& args) {');
+        cc.push('  HandleScope scope;');
+        cc.push('');
+        cc.push('   ThrowException(Exception::TypeError(String::New("glGetVertexAttribPointerv is not implemented please raise an issue https://github.com/tmpvar/node-gles2/issues")));');
+        cc.push('   return scope.Close(Undefined());');
+        cc.push('}');
+        return;
+      }
+
       while (parts.length) {
         var argType = parts.shift();
         if (argType === 'const' || argType === 'const*') {
@@ -236,8 +246,7 @@ get('http://www.khronos.org/registry/gles/api/2.0/gl2.h', function(err, res, hea
                 '',
                 '  buffer_length *= bytesPerComponent * pixelComponents;',
                 '',
-                '  Buffer *buffer = Buffer::New(buffer_length);',
-                '  memcpy(Buffer::Data(buffer), ' + name + ', buffer_length);',
+                '  Buffer *buffer = Buffer::New((char *)&' + name + ', buffer_length, free_buffer, 0);',
                 '  Local<v8::Object> globalObj = v8::Context::GetCurrent()->Global();',
                 '  Local<Function> bufferConstructor = v8::Local<v8::Function>::Cast(globalObj->Get(v8::String::New("Buffer")));',
                 '  Handle<Value> constructorArgs[3] = { buffer->handle_, v8::Integer::New(Buffer::Length(buffer)), v8::Integer::New(0) };',
