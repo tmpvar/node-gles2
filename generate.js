@@ -6,6 +6,7 @@ get('http://www.khronos.org/registry/gles/api/2.0/gl2.h', function(err, res, hea
 
   var cc = [
     '#include <node.h>',
+    '#include <node_buffer.h>',
     '#include <v8.h>',
     '#include "arch_wrapper.h"',
     '',
@@ -72,7 +73,7 @@ get('http://www.khronos.org/registry/gles/api/2.0/gl2.h', function(err, res, hea
       cc.push('Handle<Value> ' + upper  + '(const Arguments& args) {');
       cc.push('  HandleScope scope;');
       cc.push('');
-
+      var skipReturn = false;
       // collect arguments
       signature.list.forEach(function(name, i) {
 
@@ -147,38 +148,121 @@ get('http://www.khronos.org/registry/gles/api/2.0/gl2.h', function(err, res, hea
             cc.push('');
           break;
 
+
+          // outgoing params
+
+          case 'GLuint*':
+            // handle the glGen* cases
+            if (!this.arguments.length && !this.arguments.count && this.arguments.n) {
+              cc.push('');
+              cc.push('  Handle<Array> ret = Array::New(n);');
+              cc.push('  ' + type + ' ' + name + ';');
+
+              var out = [''];
+              out.push('  for (int i_' + i + '; i_' + i + ' < n; i_' + i + '++) {');
+              out.push('    ret->Set(Number::New(i_' + i + '), Number::New(' + name + '[i_' + i + ']));');
+              out.push('  }');
+              out.push('  return scope.Close(ret);');
+
+              skipReturn = out.join('\n')
+            }
+          break;
+
+          case 'GLint*':
+          case 'Glfloat*':
+
+            if (!this.arguments.length && !this.arguments.count && this.arguments.n) {
+              cc.push('  ' + type + ' ' + name + ';');
+
+              var out = [''];
+              out.push('  return scope.Close(Number::New(' + name + '));');
+              skipReturn = out.join('\n')
+            }
+          break;
+
+          case 'GLvoid*':
+            if (this.name === 'glReadPixels') {
+              cc.push('');
+              cc.push('  ' + type + ' ' + name + ';');
+              // TODO: create Buffer
+              var out = [
+                '',
+                '  unsigned long buffer_length = (width - x) * (height - y);',
+                '  int pixelComponents, bytesPerComponent;',
+                '  switch (format) {',
+                '    case GL_ALPHA:',
+                '      pixelComponents = 1;',
+                '    break;',
+                '    case GL_RGB:',
+                '      pixelComponents = 3;',
+                '    break;',
+                '    case GL_RGBA:',
+                '      pixelComponents = 4;',
+                '    break;',
+                '  }',
+                '',
+                '  switch (type) {',
+                '    case GL_UNSIGNED_SHORT_5_6_5:',
+                '    case GL_UNSIGNED_SHORT_4_4_4_4:',
+                '    case GL_UNSIGNED_SHORT_5_5_5_1:',
+                '      bytesPerComponent = 2;',
+                '    break;',
+                '',
+                '    case GL_UNSIGNED_BYTE:',
+                '      bytesPerComponent = 1;',
+                '    break;',
+                '  }',
+                '',
+                '  buffer_length *= bytesPerComponent * pixelComponents;',
+                '',
+                '  Buffer *buffer = Buffer::New(buffer_length);',
+                '  memcpy(Buffer::Data(buffer), ' + name + ', buffer_length);',
+                '  Local<v8::Object> globalObj = v8::Context::GetCurrent()->Global();',
+                '  Local<Function> bufferConstructor = v8::Local<v8::Function>::Cast(globalObj->Get(v8::String::New("Buffer")));',
+                '  Handle<Value> constructorArgs[3] = { buffer->handle_, v8::Integer::New(Buffer::Length(buffer)), v8::Integer::New(0) };',
+                '  Local<Object> actualBuffer = bufferConstructor->NewInstance(3, constructorArgs);',
+              ];
+
+              out.push('  return scope.Close(actualBuffer);');
+              skipReturn = out.join('\n')
+            }
+
+          break;
+
         }
 
       }.bind(signature));
 
       cc.push('');
 
-      switch (signature.returnType) {
-        case 'void':
-          // TODO: out args
-          cc.push('  ' + signature.name + '(' + Object.keys(signature.arguments).join(', ') + ');');
-          cc.push('  return scope.Close(Undefined());');
-        break;
 
-        case 'int':
-        case 'GLint':
-        case 'GLenum':
-        case 'GLuint':
-          cc.push('  ' + signature.returnType + ' ret = ' + signature.name + '(' + Object.keys(signature.arguments).join(', ') + ');');
-          cc.push('  return scope.Close(Number::New(ret));');
-        break;
+        switch (signature.returnType) {
+          case 'void':
+            // TODO: out args
+            cc.push('  ' + signature.name + '(' + Object.keys(signature.arguments).join(', ') + ');');
+            !skipReturn && cc.push('  return scope.Close(Undefined());');
+          break;
 
-        case 'GLboolean':
-          cc.push('  ' + signature.returnType + ' ret = ' + signature.name + '(' + Object.keys(signature.arguments).join(', ') + ');');
-          cc.push('  return scope.Close(Boolean::New(ret));');
-        break;
+          case 'int':
+          case 'GLint':
+          case 'GLenum':
+          case 'GLuint':
+            cc.push('  ' + signature.returnType + ' ret = ' + signature.name + '(' + Object.keys(signature.arguments).join(', ') + ');');
+            !skipReturn && cc.push('  return scope.Close(Number::New(ret));');
+          break;
 
-        case 'const GLubyte*':
-          cc.push('  ' + signature.returnType + ' ret = ' + signature.name + '(' + Object.keys(signature.arguments).join(', ') + ');');
-          cc.push('  return scope.Close(String::New((const char *)ret));');
-        break;
-      }
+          case 'GLboolean':
+            cc.push('  ' + signature.returnType + ' ret = ' + signature.name + '(' + Object.keys(signature.arguments).join(', ') + ');');
+            !skipReturn && cc.push('  return scope.Close(Boolean::New(ret));');
+          break;
 
+          case 'const GLubyte*':
+            cc.push('  ' + signature.returnType + ' ret = ' + signature.name + '(' + Object.keys(signature.arguments).join(', ') + ');');
+            !skipReturn && cc.push('  return scope.Close(String::New((const char *)ret));');
+          break;
+        }
+
+      skipReturn && cc.push(skipReturn);
 
       init.push('  SetMethod(target, "' + fnName + '", ' + upper + ');');
 

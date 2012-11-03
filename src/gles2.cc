@@ -1,4 +1,5 @@
 #include <node.h>
+#include <node_buffer.h>
 #include <v8.h>
 #include "arch_wrapper.h"
 
@@ -596,8 +597,15 @@ Handle<Value> GlGenBuffers(const Arguments& args) {
 
   GLsizei n = args[0]->Int32Value();
 
+  Handle<Array> ret = Array::New(n);
+  GLuint* buffers;
+
   glGenBuffers(n, buffers);
-  return scope.Close(Undefined());
+
+  for (int i_1; i_1 < n; i_1++) {
+    ret->Set(Number::New(i_1), Number::New(buffers[i_1]));
+  }
+  return scope.Close(ret);
 }
 
 Handle<Value> GlGenerateMipmap(const Arguments& args) {
@@ -614,8 +622,15 @@ Handle<Value> GlGenFramebuffers(const Arguments& args) {
 
   GLsizei n = args[0]->Int32Value();
 
+  Handle<Array> ret = Array::New(n);
+  GLuint* framebuffers;
+
   glGenFramebuffers(n, framebuffers);
-  return scope.Close(Undefined());
+
+  for (int i_1; i_1 < n; i_1++) {
+    ret->Set(Number::New(i_1), Number::New(framebuffers[i_1]));
+  }
+  return scope.Close(ret);
 }
 
 Handle<Value> GlGenRenderbuffers(const Arguments& args) {
@@ -623,8 +638,15 @@ Handle<Value> GlGenRenderbuffers(const Arguments& args) {
 
   GLsizei n = args[0]->Int32Value();
 
+  Handle<Array> ret = Array::New(n);
+  GLuint* renderbuffers;
+
   glGenRenderbuffers(n, renderbuffers);
-  return scope.Close(Undefined());
+
+  for (int i_1; i_1 < n; i_1++) {
+    ret->Set(Number::New(i_1), Number::New(renderbuffers[i_1]));
+  }
+  return scope.Close(ret);
 }
 
 Handle<Value> GlGenTextures(const Arguments& args) {
@@ -632,8 +654,15 @@ Handle<Value> GlGenTextures(const Arguments& args) {
 
   GLsizei n = args[0]->Int32Value();
 
+  Handle<Array> ret = Array::New(n);
+  GLuint* textures;
+
   glGenTextures(n, textures);
-  return scope.Close(Undefined());
+
+  for (int i_1; i_1 < n; i_1++) {
+    ret->Set(Number::New(i_1), Number::New(textures[i_1]));
+  }
+  return scope.Close(ret);
 }
 
 Handle<Value> GlGetActiveAttrib(const Arguments& args) {
@@ -1016,8 +1045,45 @@ Handle<Value> GlReadPixels(const Arguments& args) {
   GLenum format = args[4]->Int32Value();
   GLenum type = args[5]->Int32Value();
 
+  GLvoid* pixels;
+
   glReadPixels(x, y, width, height, format, type, pixels);
-  return scope.Close(Undefined());
+
+  unsigned long buffer_length = (width - x) * (height - y);
+  int pixelComponents, bytesPerComponent;
+  switch (format) {
+    case GL_ALPHA:
+      pixelComponents = 1;
+    break;
+    case GL_RGB:
+      pixelComponents = 3;
+    break;
+    case GL_RGBA:
+      pixelComponents = 4;
+    break;
+  }
+
+  switch (type) {
+    case GL_UNSIGNED_SHORT_5_6_5:
+    case GL_UNSIGNED_SHORT_4_4_4_4:
+    case GL_UNSIGNED_SHORT_5_5_5_1:
+      bytesPerComponent = 2;
+    break;
+
+    case GL_UNSIGNED_BYTE:
+      bytesPerComponent = 1;
+    break;
+  }
+
+  buffer_length *= bytesPerComponent * pixelComponents;
+
+  Buffer *buffer = Buffer::New(buffer_length);
+  memcpy(Buffer::Data(buffer), pixels, buffer_length);
+  Local<v8::Object> globalObj = v8::Context::GetCurrent()->Global();
+  Local<Function> bufferConstructor = v8::Local<v8::Function>::Cast(globalObj->Get(v8::String::New("Buffer")));
+  Handle<Value> constructorArgs[3] = { buffer->handle_, v8::Integer::New(Buffer::Length(buffer)), v8::Integer::New(0) };
+  Local<Object> actualBuffer = bufferConstructor->NewInstance(3, constructorArgs);
+  return scope.Close(actualBuffer);
 }
 
 Handle<Value> GlReleaseShaderCompiler(const Arguments& args) {
