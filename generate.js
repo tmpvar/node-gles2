@@ -122,7 +122,7 @@ get('http://www.khronos.org/registry/gles/api/2.0/gl2.h', function(err, res, hea
           case 'const GLfloat*':
             cc.push('');
             cc.push('  // buffer');
-            cc.push('  Local<Object> obj_' + name + ' = args[0]->ToObject();');
+            cc.push('  Local<Object> obj_' + name + ' = args[' + i + ']->ToObject();');
             cc.push('  if (obj_' + name + '->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {');
             cc.push('    ThrowException(Exception::TypeError(String::New("' + this.name + ' expects a Buffer for argument ' + i + '")));');
             cc.push('    return scope.Close(Undefined());');
@@ -153,7 +153,7 @@ get('http://www.khronos.org/registry/gles/api/2.0/gl2.h', function(err, res, hea
             cc.push('  const GLchar *' + name + '[length_' + i + '];');
             cc.push('  for (int i=0; i<length_' + i + '; i++) {');
 
-            cc.push('    v8::String::Utf8Value string_' + i + '(args[' + i + ']);')
+            cc.push('    String::AsciiValue string_' + i + '(array_'+name + '->Get(i));')
             cc.push('    ' + name + '[i] = *string_' + i + ';');
             cc.push('  }');
             cc.push('');
