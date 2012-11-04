@@ -146,15 +146,20 @@ get('http://www.khronos.org/registry/gles/api/2.0/gl2.h', function(err, res, hea
           break;
 
           case 'const GLchar* const*':
+            var argKeys = Object.keys(signature.arguments)
+
             cc.push('');
             cc.push('  // list of strings');
             cc.push('  Handle<Array> array_' + name + ' = Handle<Array>::Cast(args[' + i + ']);');
             cc.push('  int length_' + i + ' = array_' + name + '->Get(String::New("length"))->ToObject()->Uint32Value();');
-            cc.push('  const GLchar *' + name + '[length_' + i + '];');
+            cc.push('');
             cc.push('  for (int i=0; i<length_' + i + '; i++) {');
-
-            cc.push('    String::AsciiValue string_' + i + '(array_'+name + '->Get(i));')
-            cc.push('    ' + name + '[i] = *string_' + i + ';');
+            cc.push('    String::AsciiValue string_' + i + '(array_' + name + '->Get(i));');
+            cc.push('    const GLchar *char_' + i + ' = *string_' + i + ';');
+            argKeys[i] = '&char_' + i;
+            cc.push('  ' + signature.name + '(' + argKeys.join(', ') + ');');
+            cc.push('    ' + this.name + '(' )
+            cc.push('');
             cc.push('  }');
             cc.push('');
           break;
