@@ -84,7 +84,7 @@ get('http://www.khronos.org/registry/gles/api/2.0/gl2.h', function(err, res, hea
       cc.push('Handle<Value> ' + upper  + '(const Arguments& args) {');
       cc.push('  HandleScope scope;');
       cc.push('');
-      var skipReturn = false;
+      var skipReturn = false, skipCall = false;
       // collect arguments
       signature.list.forEach(function(name, i) {
 
@@ -134,15 +134,17 @@ get('http://www.khronos.org/registry/gles/api/2.0/gl2.h', function(err, res, hea
 
           case 'const GLuint*':
           case 'const GLint*':
-            cc.push('');
-            cc.push('  // list of Gluints');
-            cc.push('  Handle<Array> array_' + name + ' = Handle<Array>::Cast(args[' + i + ']);');
-            cc.push('  int length_' + i + ' = array_' + name + '->Get(String::New("length"))->ToObject()->Uint32Value();');
-            cc.push('  ' + type.replace('*', '').replace('const ', '') + ' ' + name + '[length_' + i + '];');
-            cc.push('  for (int i=0; i<length_' + i + '; i++) {');
-            cc.push('    ' + name + '[i] = array_' + name + '->Get(i)->ToObject()->Uint32Value();');
-            cc.push('  }');
-            cc.push('');
+            if (signature.name !== 'glShaderSource') {
+              cc.push('');
+              cc.push('  // list of Gluints');
+              cc.push('  Handle<Array> array_' + name + ' = Handle<Array>::Cast(args[' + i + ']);');
+              cc.push('  int length_' + i + ' = array_' + name + '->Get(String::New("length"))->ToObject()->Uint32Value();');
+              cc.push('  ' + type.replace('*', '').replace('const ', '') + ' ' + name + '[length_' + i + '];');
+              cc.push('  for (int i=0; i<length_' + i + '; i++) {');
+              cc.push('    ' + name + '[i] = array_' + name + '->Get(i)->ToObject()->Uint32Value();');
+              cc.push('  }');
+              cc.push('');
+            }
           break;
 
           case 'const GLchar* const*':
@@ -157,11 +159,18 @@ get('http://www.khronos.org/registry/gles/api/2.0/gl2.h', function(err, res, hea
             cc.push('    String::AsciiValue string_' + i + '(array_' + name + '->Get(i));');
             cc.push('    const GLchar *char_' + i + ' = *string_' + i + ';');
             argKeys[i] = '&char_' + i;
-            cc.push('  ' + signature.name + '(' + argKeys.join(', ') + ');');
-            cc.push('    ' + this.name + '(' )
+
+            if (signature.name === 'glShaderSource') {
+              argKeys[i+1] = 'NULL';
+            }
+
+            cc.push('    ' + signature.name + '(' + argKeys.join(', ') + ');');
             cc.push('');
             cc.push('  }');
             cc.push('');
+
+            skipCall = true;
+
           break;
 
 
@@ -281,7 +290,7 @@ get('http://www.khronos.org/registry/gles/api/2.0/gl2.h', function(err, res, hea
         switch (signature.returnType) {
           case 'void':
             // TODO: out args
-            cc.push('  ' + signature.name + '(' + Object.keys(signature.arguments).join(', ') + ');');
+            !skipCall && cc.push('  ' + signature.name + '(' + Object.keys(signature.arguments).join(', ') + ');');
             !skipReturn && cc.push('  return scope.Close(Undefined());');
           break;
 
@@ -304,7 +313,7 @@ get('http://www.khronos.org/registry/gles/api/2.0/gl2.h', function(err, res, hea
           break;
         }
 
-      skipReturn && cc.push(skipReturn);
+      skipReturn && cc.push((typeof skipReturn === 'function') ? skipReturn() : skipReturn);
 
       init.push('  SetMethod(target, "' + fnName + '", ' + upper + ');');
 

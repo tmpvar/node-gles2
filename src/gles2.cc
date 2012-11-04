@@ -1246,23 +1246,15 @@ Handle<Value> GlShaderSource(const Arguments& args) {
   // list of strings
   Handle<Array> array_string = Handle<Array>::Cast(args[2]);
   int length_2 = array_string->Get(String::New("length"))->ToObject()->Uint32Value();
-  const GLchar *string[length_2];
+
   for (int i=0; i<length_2; i++) {
     String::AsciiValue string_2(array_string->Get(i));
-    string[i] = *string_2;
+    const GLchar *char_2 = *string_2;
+    glShaderSource(shader, count, &char_2, NULL);
+
   }
 
 
-  // list of Gluints
-  Handle<Array> array_length = Handle<Array>::Cast(args[3]);
-  int length_3 = array_length->Get(String::New("length"))->ToObject()->Uint32Value();
-  GLint length[length_3];
-  for (int i=0; i<length_3; i++) {
-    length[i] = array_length->Get(i)->ToObject()->Uint32Value();
-  }
-
-
-  glShaderSource(shader, count, string, length);
   return scope.Close(Undefined());
 }
 
