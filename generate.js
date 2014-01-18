@@ -6,7 +6,7 @@ function X(type, name) {
   console.log('UNCAUGHT', type, name);
 }
 
-get('http://www.khronos.org/registry/gles/api/2.0/gl2.h', function(err, res, headerString) {
+get('http://www.khronos.org/registry/gles/api/GLES2/gl2.h', function(err, res, headerString) {
 
   var cc = [
     '#include <node.h>',
