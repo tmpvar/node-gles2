@@ -81,10 +81,10 @@ Handle<Value> GlBindTexture(const Arguments& args) {
 Handle<Value> GlBlendColor(const Arguments& args) {
   HandleScope scope;
 
-  GLclampf red = args[0]->NumberValue();
-  GLclampf green = args[1]->NumberValue();
-  GLclampf blue = args[2]->NumberValue();
-  GLclampf alpha = args[3]->NumberValue();
+  GLfloat red = args[0]->NumberValue();
+  GLfloat green = args[1]->NumberValue();
+  GLfloat blue = args[2]->NumberValue();
+  GLfloat alpha = args[3]->NumberValue();
 
   glBlendColor(red, green, blue, alpha);
   return scope.Close(Undefined());
@@ -122,12 +122,12 @@ Handle<Value> GlBlendFunc(const Arguments& args) {
 Handle<Value> GlBlendFuncSeparate(const Arguments& args) {
   HandleScope scope;
 
-  GLenum srcRGB = args[0]->Int32Value();
-  GLenum dstRGB = args[1]->Int32Value();
-  GLenum srcAlpha = args[2]->Int32Value();
-  GLenum dstAlpha = args[3]->Int32Value();
+  GLenum sfactorRGB = args[0]->Int32Value();
+  GLenum dfactorRGB = args[1]->Int32Value();
+  GLenum sfactorAlpha = args[2]->Int32Value();
+  GLenum dfactorAlpha = args[3]->Int32Value();
 
-  glBlendFuncSeparate(srcRGB, dstRGB, srcAlpha, dstAlpha);
+  glBlendFuncSeparate(sfactorRGB, dfactorRGB, sfactorAlpha, dfactorAlpha);
   return scope.Close(Undefined());
 }
 
@@ -143,7 +143,7 @@ Handle<Value> GlBufferData(const Arguments& args) {
     ThrowException(Exception::TypeError(String::New("glBufferData expects a Buffer for argument 2")));
     return scope.Close(Undefined());
   }
-  const GLvoid* data = static_cast<const GLvoid*>(obj_data->GetIndexedPropertiesExternalArrayData());
+  const void* data = static_cast<const void*>(obj_data->GetIndexedPropertiesExternalArrayData());
 
   GLenum usage = args[3]->Int32Value();
 
@@ -164,7 +164,7 @@ Handle<Value> GlBufferSubData(const Arguments& args) {
     ThrowException(Exception::TypeError(String::New("glBufferSubData expects a Buffer for argument 3")));
     return scope.Close(Undefined());
   }
-  const GLvoid* data = static_cast<const GLvoid*>(obj_data->GetIndexedPropertiesExternalArrayData());
+  const void* data = static_cast<const void*>(obj_data->GetIndexedPropertiesExternalArrayData());
 
 
   glBufferSubData(target, offset, size, data);
@@ -192,10 +192,10 @@ Handle<Value> GlClear(const Arguments& args) {
 Handle<Value> GlClearColor(const Arguments& args) {
   HandleScope scope;
 
-  GLclampf red = args[0]->NumberValue();
-  GLclampf green = args[1]->NumberValue();
-  GLclampf blue = args[2]->NumberValue();
-  GLclampf alpha = args[3]->NumberValue();
+  GLfloat red = args[0]->NumberValue();
+  GLfloat green = args[1]->NumberValue();
+  GLfloat blue = args[2]->NumberValue();
+  GLfloat alpha = args[3]->NumberValue();
 
   glClearColor(red, green, blue, alpha);
   return scope.Close(Undefined());
@@ -204,9 +204,9 @@ Handle<Value> GlClearColor(const Arguments& args) {
 Handle<Value> GlClearDepthf(const Arguments& args) {
   HandleScope scope;
 
-  GLclampf depth = args[0]->NumberValue();
+  GLfloat d = args[0]->NumberValue();
 
-  glClearDepthf(depth);
+  glClearDepthf(d);
   return scope.Close(Undefined());
 }
 
@@ -257,7 +257,7 @@ Handle<Value> GlCompressedTexImage2D(const Arguments& args) {
     ThrowException(Exception::TypeError(String::New("glCompressedTexImage2D expects a Buffer for argument 7")));
     return scope.Close(Undefined());
   }
-  const GLvoid* data = static_cast<const GLvoid*>(obj_data->GetIndexedPropertiesExternalArrayData());
+  const void* data = static_cast<const void*>(obj_data->GetIndexedPropertiesExternalArrayData());
 
 
   glCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data);
@@ -282,7 +282,7 @@ Handle<Value> GlCompressedTexSubImage2D(const Arguments& args) {
     ThrowException(Exception::TypeError(String::New("glCompressedTexSubImage2D expects a Buffer for argument 8")));
     return scope.Close(Undefined());
   }
-  const GLvoid* data = static_cast<const GLvoid*>(obj_data->GetIndexedPropertiesExternalArrayData());
+  const void* data = static_cast<const void*>(obj_data->GetIndexedPropertiesExternalArrayData());
 
 
   glCompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize, data);
@@ -458,10 +458,10 @@ Handle<Value> GlDepthMask(const Arguments& args) {
 Handle<Value> GlDepthRangef(const Arguments& args) {
   HandleScope scope;
 
-  GLclampf zNear = args[0]->NumberValue();
-  GLclampf zFar = args[1]->NumberValue();
+  GLfloat n = args[0]->NumberValue();
+  GLfloat f = args[1]->NumberValue();
 
-  glDepthRangef(zNear, zFar);
+  glDepthRangef(n, f);
   return scope.Close(Undefined());
 }
 
@@ -517,7 +517,7 @@ Handle<Value> GlDrawElements(const Arguments& args) {
     ThrowException(Exception::TypeError(String::New("glDrawElements expects a Buffer for argument 3")));
     return scope.Close(Undefined());
   }
-  const GLvoid* indices = static_cast<const GLvoid*>(obj_indices->GetIndexedPropertiesExternalArrayData());
+  const void* indices = static_cast<const void*>(obj_indices->GetIndexedPropertiesExternalArrayData());
 
 
   glDrawElements(mode, count, type, indices);
@@ -597,15 +597,17 @@ Handle<Value> GlGenBuffers(const Arguments& args) {
 
   GLsizei n = args[0]->Int32Value();
 
-  Handle<Array> ret = Array::New(n);
-  GLuint* buffers = 0;
+  // list of Gluints
+  Handle<Array> array_buffers = Handle<Array>::Cast(args[1]);
+  int length_1 = array_buffers->Get(String::New("length"))->ToObject()->Uint32Value();
+  GLuint buffers[length_1];
+  for (int i=0; i<length_1; i++) {
+    buffers[i] = array_buffers->Get(i)->ToObject()->Uint32Value();
+  }
+
 
   glGenBuffers(n, buffers);
-
-  for (int i_1=0; i_1 < n; i_1++) {
-    ret->Set(Number::New(i_1), Number::New(buffers[i_1]));
-  }
-  return scope.Close(ret);
+  return scope.Close(Undefined());
 }
 
 Handle<Value> GlGenerateMipmap(const Arguments& args) {
@@ -622,15 +624,17 @@ Handle<Value> GlGenFramebuffers(const Arguments& args) {
 
   GLsizei n = args[0]->Int32Value();
 
-  Handle<Array> ret = Array::New(n);
-  GLuint* framebuffers = 0;
+  // list of Gluints
+  Handle<Array> array_framebuffers = Handle<Array>::Cast(args[1]);
+  int length_1 = array_framebuffers->Get(String::New("length"))->ToObject()->Uint32Value();
+  GLuint framebuffers[length_1];
+  for (int i=0; i<length_1; i++) {
+    framebuffers[i] = array_framebuffers->Get(i)->ToObject()->Uint32Value();
+  }
+
 
   glGenFramebuffers(n, framebuffers);
-
-  for (int i_1=0; i_1 < n; i_1++) {
-    ret->Set(Number::New(i_1), Number::New(framebuffers[i_1]));
-  }
-  return scope.Close(ret);
+  return scope.Close(Undefined());
 }
 
 Handle<Value> GlGenRenderbuffers(const Arguments& args) {
@@ -638,15 +642,17 @@ Handle<Value> GlGenRenderbuffers(const Arguments& args) {
 
   GLsizei n = args[0]->Int32Value();
 
-  Handle<Array> ret = Array::New(n);
-  GLuint* renderbuffers = 0;
+  // list of Gluints
+  Handle<Array> array_renderbuffers = Handle<Array>::Cast(args[1]);
+  int length_1 = array_renderbuffers->Get(String::New("length"))->ToObject()->Uint32Value();
+  GLuint renderbuffers[length_1];
+  for (int i=0; i<length_1; i++) {
+    renderbuffers[i] = array_renderbuffers->Get(i)->ToObject()->Uint32Value();
+  }
+
 
   glGenRenderbuffers(n, renderbuffers);
-
-  for (int i_1=0; i_1 < n; i_1++) {
-    ret->Set(Number::New(i_1), Number::New(renderbuffers[i_1]));
-  }
-  return scope.Close(ret);
+  return scope.Close(Undefined());
 }
 
 Handle<Value> GlGenTextures(const Arguments& args) {
@@ -654,15 +660,17 @@ Handle<Value> GlGenTextures(const Arguments& args) {
 
   GLsizei n = args[0]->Int32Value();
 
-  Handle<Array> ret = Array::New(n);
-  GLuint* textures = 0;
+  // list of Gluints
+  Handle<Array> array_textures = Handle<Array>::Cast(args[1]);
+  int length_1 = array_textures->Get(String::New("length"))->ToObject()->Uint32Value();
+  GLuint textures[length_1];
+  for (int i=0; i<length_1; i++) {
+    textures[i] = array_textures->Get(i)->ToObject()->Uint32Value();
+  }
+
 
   glGenTextures(n, textures);
-
-  for (int i_1=0; i_1 < n; i_1++) {
-    ret->Set(Number::New(i_1), Number::New(textures[i_1]));
-  }
-  return scope.Close(ret);
+  return scope.Close(Undefined());
 }
 
 Handle<Value> GlGetActiveAttrib(const Arguments& args) {
@@ -670,18 +678,19 @@ Handle<Value> GlGetActiveAttrib(const Arguments& args) {
 
   GLuint program = args[0]->Uint32Value();
   GLuint index = args[1]->Uint32Value();
-  GLsizei bufsize = args[2]->Int32Value();
+  GLsizei bufSize = args[2]->Int32Value();
   GLsizei length_base = 0;
   GLsizei* length = &length_base;
   GLint size_base = 0;
   GLint* size = &size_base;
   GLenum type_base = 0;
   GLenum* type = &type_base;
-  GLchar name[bufsize];
+  v8::String::Utf8Value string_name(args[6]);
+  GLchar* name = *string_name;
 
-  glGetActiveAttrib(program, index, bufsize, length, size, type, name);
+  glGetActiveAttrib(program, index, bufSize, length, size, type, name);
 
-  return scope.Close(String::New(name));
+  return scope.Close(Number::New(type_base));
 }
 
 Handle<Value> GlGetActiveUniform(const Arguments& args) {
@@ -689,37 +698,41 @@ Handle<Value> GlGetActiveUniform(const Arguments& args) {
 
   GLuint program = args[0]->Uint32Value();
   GLuint index = args[1]->Uint32Value();
-  GLsizei bufsize = args[2]->Int32Value();
+  GLsizei bufSize = args[2]->Int32Value();
   GLsizei length_base = 0;
   GLsizei* length = &length_base;
   GLint size_base = 0;
   GLint* size = &size_base;
   GLenum type_base = 0;
   GLenum* type = &type_base;
-  GLchar name[bufsize];
+  v8::String::Utf8Value string_name(args[6]);
+  GLchar* name = *string_name;
 
-  glGetActiveUniform(program, index, bufsize, length, size, type, name);
+  glGetActiveUniform(program, index, bufSize, length, size, type, name);
 
-  return scope.Close(String::New(name));
+  return scope.Close(Number::New(type_base));
 }
 
 Handle<Value> GlGetAttachedShaders(const Arguments& args) {
   HandleScope scope;
 
   GLuint program = args[0]->Uint32Value();
-  GLsizei maxcount = args[1]->Int32Value();
+  GLsizei maxCount = args[1]->Int32Value();
   GLsizei count_base = 0;
   GLsizei* count = &count_base;
 
-  Handle<Array> ret = Array::New(maxcount);
-  GLuint* shaders = 0;
-
-  glGetAttachedShaders(program, maxcount, count, shaders);
-
-  for (int i_3=0; i_3 < maxcount; i_3++) {
-    ret->Set(Number::New(i_3), Number::New(shaders[i_3]));
+  // list of Gluints
+  Handle<Array> array_shaders = Handle<Array>::Cast(args[3]);
+  int length_3 = array_shaders->Get(String::New("length"))->ToObject()->Uint32Value();
+  GLuint shaders[length_3];
+  for (int i=0; i<length_3; i++) {
+    shaders[i] = array_shaders->Get(i)->ToObject()->Uint32Value();
   }
-  return scope.Close(ret);
+
+
+  glGetAttachedShaders(program, maxCount, count, shaders);
+
+  return scope.Close(Number::New(count_base));
 }
 
 Handle<Value> GlGetAttribLocation(const Arguments& args) {
@@ -729,7 +742,7 @@ Handle<Value> GlGetAttribLocation(const Arguments& args) {
   v8::String::Utf8Value string_name(args[1]);
   const GLchar* name = *string_name;
 
-  int ret = glGetAttribLocation(program, name);
+  GLint ret = glGetAttribLocation(program, name);
   return scope.Close(Number::New(ret));
 }
 
@@ -737,12 +750,12 @@ Handle<Value> GlGetBooleanv(const Arguments& args) {
   HandleScope scope;
 
   GLenum pname = args[0]->Int32Value();
-  GLboolean params_base = 0;
-  GLboolean* params = &params_base;
+  GLboolean data_base = 0;
+  GLboolean* data = &data_base;
 
-  glGetBooleanv(pname, params);
+  glGetBooleanv(pname, data);
 
-  return scope.Close(Boolean::New(params_base));
+  return scope.Close(Boolean::New(data_base));
 }
 
 Handle<Value> GlGetBufferParameteriv(const Arguments& args) {
@@ -770,12 +783,12 @@ Handle<Value> GlGetFloatv(const Arguments& args) {
   HandleScope scope;
 
   GLenum pname = args[0]->Int32Value();
-  GLfloat params_base = 0;
-  GLfloat* params = &params_base;
+  GLfloat data_base = 0;
+  GLfloat* data = &data_base;
 
-  glGetFloatv(pname, params);
+  glGetFloatv(pname, data);
 
-  return scope.Close(Number::New(params_base));
+  return scope.Close(Number::New(data_base));
 }
 
 Handle<Value> GlGetFramebufferAttachmentParameteriv(const Arguments& args) {
@@ -796,12 +809,12 @@ Handle<Value> GlGetIntegerv(const Arguments& args) {
   HandleScope scope;
 
   GLenum pname = args[0]->Int32Value();
-  GLint params_base = 0;
-  GLint* params = &params_base;
+  GLint data_base = 0;
+  GLint* data = &data_base;
 
-  glGetIntegerv(pname, params);
+  glGetIntegerv(pname, data);
 
-  return scope.Close(Number::New(params_base));
+  return scope.Close(Number::New(data_base));
 }
 
 Handle<Value> GlGetProgramiv(const Arguments& args) {
@@ -821,14 +834,15 @@ Handle<Value> GlGetProgramInfoLog(const Arguments& args) {
   HandleScope scope;
 
   GLuint program = args[0]->Uint32Value();
-  GLsizei bufsize = args[1]->Int32Value();
+  GLsizei bufSize = args[1]->Int32Value();
   GLsizei length_base = 0;
   GLsizei* length = &length_base;
-  GLchar infolog[bufsize];
+  v8::String::Utf8Value string_infoLog(args[3]);
+  GLchar* infoLog = *string_infoLog;
 
-  glGetProgramInfoLog(program, bufsize, length, infolog);
+  glGetProgramInfoLog(program, bufSize, length, infoLog);
 
-  return scope.Close(String::New(infolog));
+  return scope.Close(Number::New(length_base));
 }
 
 Handle<Value> GlGetRenderbufferParameteriv(const Arguments& args) {
@@ -861,14 +875,15 @@ Handle<Value> GlGetShaderInfoLog(const Arguments& args) {
   HandleScope scope;
 
   GLuint shader = args[0]->Uint32Value();
-  GLsizei bufsize = args[1]->Int32Value();
+  GLsizei bufSize = args[1]->Int32Value();
   GLsizei length_base = 0;
   GLsizei* length = &length_base;
-  GLchar infolog[bufsize];
+  v8::String::Utf8Value string_infoLog(args[3]);
+  GLchar* infoLog = *string_infoLog;
 
-  glGetShaderInfoLog(shader, bufsize, length, infolog);
+  glGetShaderInfoLog(shader, bufSize, length, infoLog);
 
-  return scope.Close(String::New(infolog));
+  return scope.Close(Number::New(length_base));
 }
 
 Handle<Value> GlGetShaderPrecisionFormat(const Arguments& args) {
@@ -890,23 +905,15 @@ Handle<Value> GlGetShaderSource(const Arguments& args) {
   HandleScope scope;
 
   GLuint shader = args[0]->Uint32Value();
-  GLsizei bufsize = args[1]->Int32Value();
+  GLsizei bufSize = args[1]->Int32Value();
   GLsizei length_base = 0;
   GLsizei* length = &length_base;
-  GLchar source[bufsize];
+  v8::String::Utf8Value string_source(args[3]);
+  GLchar* source = *string_source;
 
-  glGetShaderSource(shader, bufsize, length, source);
+  glGetShaderSource(shader, bufSize, length, source);
 
-  return scope.Close(String::New(source));
-}
-
-Handle<Value> GlGetString(const Arguments& args) {
-  HandleScope scope;
-
-  GLenum name = args[0]->Int32Value();
-
-  const GLubyte* ret = glGetString(name);
-  return scope.Close(String::New((const char *)ret));
+  return scope.Close(Number::New(length_base));
 }
 
 Handle<Value> GlGetTexParameterfv(const Arguments& args) {
@@ -968,7 +975,7 @@ Handle<Value> GlGetUniformLocation(const Arguments& args) {
   v8::String::Utf8Value string_name(args[1]);
   const GLchar* name = *string_name;
 
-  int ret = glGetUniformLocation(program, name);
+  GLint ret = glGetUniformLocation(program, name);
   return scope.Close(Number::New(ret));
 }
 
@@ -1125,45 +1132,17 @@ Handle<Value> GlReadPixels(const Arguments& args) {
   GLenum format = args[4]->Int32Value();
   GLenum type = args[5]->Int32Value();
 
-  GLvoid* pixels = 0;
+  // buffer
+  Local<Object> obj_pixels = args[6]->ToObject();
+  if (obj_pixels->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
+    ThrowException(Exception::TypeError(String::New("glReadPixels expects a Buffer for argument 6")));
+    return scope.Close(Undefined());
+  }
+  void* pixels = static_cast<void*>(obj_pixels->GetIndexedPropertiesExternalArrayData());
+
 
   glReadPixels(x, y, width, height, format, type, pixels);
-
-  unsigned long buffer_length = (width - x) * (height - y);
-  int pixelComponents=0, bytesPerComponent=0;
-  switch (format) {
-    case GL_ALPHA:
-      pixelComponents = 1;
-    break;
-    case GL_RGB:
-      pixelComponents = 3;
-    break;
-    case GL_RGBA:
-      pixelComponents = 4;
-    break;
-  }
-
-  switch (type) {
-    case GL_UNSIGNED_SHORT_5_6_5:
-    case GL_UNSIGNED_SHORT_4_4_4_4:
-    case GL_UNSIGNED_SHORT_5_5_5_1:
-      bytesPerComponent = 2;
-    break;
-
-    case GL_UNSIGNED_BYTE:
-      bytesPerComponent = 1;
-    break;
-  }
-
-  buffer_length *= bytesPerComponent * pixelComponents;
-
-  Buffer *buffer = Buffer::New((char *)&pixels, buffer_length, free_buffer, 0);
-  Local<v8::Object> globalObj = v8::Context::GetCurrent()->Global();
-  Local<Function> bufferConstructor = v8::Local<v8::Function>::Cast(globalObj->Get(v8::String::New("Buffer")));
-  Handle<Value> constructorArgs[3] = { buffer->handle_, v8::Integer::New(Buffer::Length(buffer)), v8::Integer::New(0) };
-  Local<Object> actualBuffer = bufferConstructor->NewInstance(3, constructorArgs);
-
-  return scope.Close(actualBuffer);
+  return scope.Close(Undefined());
 }
 
 Handle<Value> GlReleaseShaderCompiler(const Arguments& args) {
@@ -1189,7 +1168,7 @@ Handle<Value> GlRenderbufferStorage(const Arguments& args) {
 Handle<Value> GlSampleCoverage(const Arguments& args) {
   HandleScope scope;
 
-  GLclampf value = args[0]->NumberValue();
+  GLfloat value = args[0]->NumberValue();
   GLboolean invert = (GLboolean)args[1]->Int32Value();
 
   glSampleCoverage(value, invert);
@@ -1211,7 +1190,7 @@ Handle<Value> GlScissor(const Arguments& args) {
 Handle<Value> GlShaderBinary(const Arguments& args) {
   HandleScope scope;
 
-  GLsizei n = args[0]->Int32Value();
+  GLsizei count = args[0]->Int32Value();
 
   // list of Gluints
   Handle<Array> array_shaders = Handle<Array>::Cast(args[1]);
@@ -1229,11 +1208,11 @@ Handle<Value> GlShaderBinary(const Arguments& args) {
     ThrowException(Exception::TypeError(String::New("glShaderBinary expects a Buffer for argument 3")));
     return scope.Close(Undefined());
   }
-  const GLvoid* binary = static_cast<const GLvoid*>(obj_binary->GetIndexedPropertiesExternalArrayData());
+  const void* binary = static_cast<const void*>(obj_binary->GetIndexedPropertiesExternalArrayData());
 
   GLsizei length = args[4]->Int32Value();
 
-  glShaderBinary(n, shaders, binaryformat, binary, length);
+  glShaderBinary(count, shaders, binaryformat, binary, length);
   return scope.Close(Undefined());
 }
 
@@ -1315,11 +1294,11 @@ Handle<Value> GlStencilOpSeparate(const Arguments& args) {
   HandleScope scope;
 
   GLenum face = args[0]->Int32Value();
-  GLenum fail = args[1]->Int32Value();
-  GLenum zfail = args[2]->Int32Value();
-  GLenum zpass = args[3]->Int32Value();
+  GLenum sfail = args[1]->Int32Value();
+  GLenum dpfail = args[2]->Int32Value();
+  GLenum dppass = args[3]->Int32Value();
 
-  glStencilOpSeparate(face, fail, zfail, zpass);
+  glStencilOpSeparate(face, sfail, dpfail, dppass);
   return scope.Close(Undefined());
 }
 
@@ -1341,7 +1320,7 @@ Handle<Value> GlTexImage2D(const Arguments& args) {
     ThrowException(Exception::TypeError(String::New("glTexImage2D expects a Buffer for argument 8")));
     return scope.Close(Undefined());
   }
-  const GLvoid* pixels = static_cast<const GLvoid*>(obj_pixels->GetIndexedPropertiesExternalArrayData());
+  const void* pixels = static_cast<const void*>(obj_pixels->GetIndexedPropertiesExternalArrayData());
 
 
   glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels);
@@ -1426,7 +1405,7 @@ Handle<Value> GlTexSubImage2D(const Arguments& args) {
     ThrowException(Exception::TypeError(String::New("glTexSubImage2D expects a Buffer for argument 8")));
     return scope.Close(Undefined());
   }
-  const GLvoid* pixels = static_cast<const GLvoid*>(obj_pixels->GetIndexedPropertiesExternalArrayData());
+  const void* pixels = static_cast<const void*>(obj_pixels->GetIndexedPropertiesExternalArrayData());
 
 
   glTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels);
@@ -1437,9 +1416,9 @@ Handle<Value> GlUniform1f(const Arguments& args) {
   HandleScope scope;
 
   GLint location = args[0]->Int32Value();
-  GLfloat x = args[1]->NumberValue();
+  GLfloat v0 = args[1]->NumberValue();
 
-  glUniform1f(location, x);
+  glUniform1f(location, v0);
   return scope.Close(Undefined());
 }
 
@@ -1450,15 +1429,15 @@ Handle<Value> GlUniform1fv(const Arguments& args) {
   GLsizei count = args[1]->Int32Value();
 
   // buffer
-  Local<Object> obj_v = args[2]->ToObject();
-  if (obj_v->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
+  Local<Object> obj_value = args[2]->ToObject();
+  if (obj_value->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
     ThrowException(Exception::TypeError(String::New("glUniform1fv expects a Buffer for argument 2")));
     return scope.Close(Undefined());
   }
-  const GLfloat* v = static_cast<const GLfloat*>(obj_v->GetIndexedPropertiesExternalArrayData());
+  const GLfloat* value = static_cast<const GLfloat*>(obj_value->GetIndexedPropertiesExternalArrayData());
 
 
-  glUniform1fv(location, count, v);
+  glUniform1fv(location, count, value);
   return scope.Close(Undefined());
 }
 
@@ -1466,9 +1445,9 @@ Handle<Value> GlUniform1i(const Arguments& args) {
   HandleScope scope;
 
   GLint location = args[0]->Int32Value();
-  GLint x = args[1]->Int32Value();
+  GLint v0 = args[1]->Int32Value();
 
-  glUniform1i(location, x);
+  glUniform1i(location, v0);
   return scope.Close(Undefined());
 }
 
@@ -1479,15 +1458,15 @@ Handle<Value> GlUniform1iv(const Arguments& args) {
   GLsizei count = args[1]->Int32Value();
 
   // list of Gluints
-  Handle<Array> array_v = Handle<Array>::Cast(args[2]);
-  int length_2 = array_v->Get(String::New("length"))->ToObject()->Uint32Value();
-  GLint v[length_2];
+  Handle<Array> array_value = Handle<Array>::Cast(args[2]);
+  int length_2 = array_value->Get(String::New("length"))->ToObject()->Uint32Value();
+  GLint value[length_2];
   for (int i=0; i<length_2; i++) {
-    v[i] = array_v->Get(i)->ToObject()->Uint32Value();
+    value[i] = array_value->Get(i)->ToObject()->Uint32Value();
   }
 
 
-  glUniform1iv(location, count, v);
+  glUniform1iv(location, count, value);
   return scope.Close(Undefined());
 }
 
@@ -1495,10 +1474,10 @@ Handle<Value> GlUniform2f(const Arguments& args) {
   HandleScope scope;
 
   GLint location = args[0]->Int32Value();
-  GLfloat x = args[1]->NumberValue();
-  GLfloat y = args[2]->NumberValue();
+  GLfloat v0 = args[1]->NumberValue();
+  GLfloat v1 = args[2]->NumberValue();
 
-  glUniform2f(location, x, y);
+  glUniform2f(location, v0, v1);
   return scope.Close(Undefined());
 }
 
@@ -1509,15 +1488,15 @@ Handle<Value> GlUniform2fv(const Arguments& args) {
   GLsizei count = args[1]->Int32Value();
 
   // buffer
-  Local<Object> obj_v = args[2]->ToObject();
-  if (obj_v->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
+  Local<Object> obj_value = args[2]->ToObject();
+  if (obj_value->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
     ThrowException(Exception::TypeError(String::New("glUniform2fv expects a Buffer for argument 2")));
     return scope.Close(Undefined());
   }
-  const GLfloat* v = static_cast<const GLfloat*>(obj_v->GetIndexedPropertiesExternalArrayData());
+  const GLfloat* value = static_cast<const GLfloat*>(obj_value->GetIndexedPropertiesExternalArrayData());
 
 
-  glUniform2fv(location, count, v);
+  glUniform2fv(location, count, value);
   return scope.Close(Undefined());
 }
 
@@ -1525,10 +1504,10 @@ Handle<Value> GlUniform2i(const Arguments& args) {
   HandleScope scope;
 
   GLint location = args[0]->Int32Value();
-  GLint x = args[1]->Int32Value();
-  GLint y = args[2]->Int32Value();
+  GLint v0 = args[1]->Int32Value();
+  GLint v1 = args[2]->Int32Value();
 
-  glUniform2i(location, x, y);
+  glUniform2i(location, v0, v1);
   return scope.Close(Undefined());
 }
 
@@ -1539,15 +1518,15 @@ Handle<Value> GlUniform2iv(const Arguments& args) {
   GLsizei count = args[1]->Int32Value();
 
   // list of Gluints
-  Handle<Array> array_v = Handle<Array>::Cast(args[2]);
-  int length_2 = array_v->Get(String::New("length"))->ToObject()->Uint32Value();
-  GLint v[length_2];
+  Handle<Array> array_value = Handle<Array>::Cast(args[2]);
+  int length_2 = array_value->Get(String::New("length"))->ToObject()->Uint32Value();
+  GLint value[length_2];
   for (int i=0; i<length_2; i++) {
-    v[i] = array_v->Get(i)->ToObject()->Uint32Value();
+    value[i] = array_value->Get(i)->ToObject()->Uint32Value();
   }
 
 
-  glUniform2iv(location, count, v);
+  glUniform2iv(location, count, value);
   return scope.Close(Undefined());
 }
 
@@ -1555,11 +1534,11 @@ Handle<Value> GlUniform3f(const Arguments& args) {
   HandleScope scope;
 
   GLint location = args[0]->Int32Value();
-  GLfloat x = args[1]->NumberValue();
-  GLfloat y = args[2]->NumberValue();
-  GLfloat z = args[3]->NumberValue();
+  GLfloat v0 = args[1]->NumberValue();
+  GLfloat v1 = args[2]->NumberValue();
+  GLfloat v2 = args[3]->NumberValue();
 
-  glUniform3f(location, x, y, z);
+  glUniform3f(location, v0, v1, v2);
   return scope.Close(Undefined());
 }
 
@@ -1570,15 +1549,15 @@ Handle<Value> GlUniform3fv(const Arguments& args) {
   GLsizei count = args[1]->Int32Value();
 
   // buffer
-  Local<Object> obj_v = args[2]->ToObject();
-  if (obj_v->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
+  Local<Object> obj_value = args[2]->ToObject();
+  if (obj_value->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
     ThrowException(Exception::TypeError(String::New("glUniform3fv expects a Buffer for argument 2")));
     return scope.Close(Undefined());
   }
-  const GLfloat* v = static_cast<const GLfloat*>(obj_v->GetIndexedPropertiesExternalArrayData());
+  const GLfloat* value = static_cast<const GLfloat*>(obj_value->GetIndexedPropertiesExternalArrayData());
 
 
-  glUniform3fv(location, count, v);
+  glUniform3fv(location, count, value);
   return scope.Close(Undefined());
 }
 
@@ -1586,11 +1565,11 @@ Handle<Value> GlUniform3i(const Arguments& args) {
   HandleScope scope;
 
   GLint location = args[0]->Int32Value();
-  GLint x = args[1]->Int32Value();
-  GLint y = args[2]->Int32Value();
-  GLint z = args[3]->Int32Value();
+  GLint v0 = args[1]->Int32Value();
+  GLint v1 = args[2]->Int32Value();
+  GLint v2 = args[3]->Int32Value();
 
-  glUniform3i(location, x, y, z);
+  glUniform3i(location, v0, v1, v2);
   return scope.Close(Undefined());
 }
 
@@ -1601,15 +1580,15 @@ Handle<Value> GlUniform3iv(const Arguments& args) {
   GLsizei count = args[1]->Int32Value();
 
   // list of Gluints
-  Handle<Array> array_v = Handle<Array>::Cast(args[2]);
-  int length_2 = array_v->Get(String::New("length"))->ToObject()->Uint32Value();
-  GLint v[length_2];
+  Handle<Array> array_value = Handle<Array>::Cast(args[2]);
+  int length_2 = array_value->Get(String::New("length"))->ToObject()->Uint32Value();
+  GLint value[length_2];
   for (int i=0; i<length_2; i++) {
-    v[i] = array_v->Get(i)->ToObject()->Uint32Value();
+    value[i] = array_value->Get(i)->ToObject()->Uint32Value();
   }
 
 
-  glUniform3iv(location, count, v);
+  glUniform3iv(location, count, value);
   return scope.Close(Undefined());
 }
 
@@ -1617,12 +1596,12 @@ Handle<Value> GlUniform4f(const Arguments& args) {
   HandleScope scope;
 
   GLint location = args[0]->Int32Value();
-  GLfloat x = args[1]->NumberValue();
-  GLfloat y = args[2]->NumberValue();
-  GLfloat z = args[3]->NumberValue();
-  GLfloat w = args[4]->NumberValue();
+  GLfloat v0 = args[1]->NumberValue();
+  GLfloat v1 = args[2]->NumberValue();
+  GLfloat v2 = args[3]->NumberValue();
+  GLfloat v3 = args[4]->NumberValue();
 
-  glUniform4f(location, x, y, z, w);
+  glUniform4f(location, v0, v1, v2, v3);
   return scope.Close(Undefined());
 }
 
@@ -1633,15 +1612,15 @@ Handle<Value> GlUniform4fv(const Arguments& args) {
   GLsizei count = args[1]->Int32Value();
 
   // buffer
-  Local<Object> obj_v = args[2]->ToObject();
-  if (obj_v->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
+  Local<Object> obj_value = args[2]->ToObject();
+  if (obj_value->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
     ThrowException(Exception::TypeError(String::New("glUniform4fv expects a Buffer for argument 2")));
     return scope.Close(Undefined());
   }
-  const GLfloat* v = static_cast<const GLfloat*>(obj_v->GetIndexedPropertiesExternalArrayData());
+  const GLfloat* value = static_cast<const GLfloat*>(obj_value->GetIndexedPropertiesExternalArrayData());
 
 
-  glUniform4fv(location, count, v);
+  glUniform4fv(location, count, value);
   return scope.Close(Undefined());
 }
 
@@ -1649,12 +1628,12 @@ Handle<Value> GlUniform4i(const Arguments& args) {
   HandleScope scope;
 
   GLint location = args[0]->Int32Value();
-  GLint x = args[1]->Int32Value();
-  GLint y = args[2]->Int32Value();
-  GLint z = args[3]->Int32Value();
-  GLint w = args[4]->Int32Value();
+  GLint v0 = args[1]->Int32Value();
+  GLint v1 = args[2]->Int32Value();
+  GLint v2 = args[3]->Int32Value();
+  GLint v3 = args[4]->Int32Value();
 
-  glUniform4i(location, x, y, z, w);
+  glUniform4i(location, v0, v1, v2, v3);
   return scope.Close(Undefined());
 }
 
@@ -1665,15 +1644,15 @@ Handle<Value> GlUniform4iv(const Arguments& args) {
   GLsizei count = args[1]->Int32Value();
 
   // list of Gluints
-  Handle<Array> array_v = Handle<Array>::Cast(args[2]);
-  int length_2 = array_v->Get(String::New("length"))->ToObject()->Uint32Value();
-  GLint v[length_2];
+  Handle<Array> array_value = Handle<Array>::Cast(args[2]);
+  int length_2 = array_value->Get(String::New("length"))->ToObject()->Uint32Value();
+  GLint value[length_2];
   for (int i=0; i<length_2; i++) {
-    v[i] = array_v->Get(i)->ToObject()->Uint32Value();
+    value[i] = array_value->Get(i)->ToObject()->Uint32Value();
   }
 
 
-  glUniform4iv(location, count, v);
+  glUniform4iv(location, count, value);
   return scope.Close(Undefined());
 }
 
@@ -1758,140 +1737,140 @@ Handle<Value> GlValidateProgram(const Arguments& args) {
 Handle<Value> GlVertexAttrib1f(const Arguments& args) {
   HandleScope scope;
 
-  GLuint indx = args[0]->Uint32Value();
+  GLuint index = args[0]->Uint32Value();
   GLfloat x = args[1]->NumberValue();
 
-  glVertexAttrib1f(indx, x);
+  glVertexAttrib1f(index, x);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlVertexAttrib1fv(const Arguments& args) {
   HandleScope scope;
 
-  GLuint indx = args[0]->Uint32Value();
+  GLuint index = args[0]->Uint32Value();
 
   // buffer
-  Local<Object> obj_values = args[1]->ToObject();
-  if (obj_values->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
+  Local<Object> obj_v = args[1]->ToObject();
+  if (obj_v->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
     ThrowException(Exception::TypeError(String::New("glVertexAttrib1fv expects a Buffer for argument 1")));
     return scope.Close(Undefined());
   }
-  const GLfloat* values = static_cast<const GLfloat*>(obj_values->GetIndexedPropertiesExternalArrayData());
+  const GLfloat* v = static_cast<const GLfloat*>(obj_v->GetIndexedPropertiesExternalArrayData());
 
 
-  glVertexAttrib1fv(indx, values);
+  glVertexAttrib1fv(index, v);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlVertexAttrib2f(const Arguments& args) {
   HandleScope scope;
 
-  GLuint indx = args[0]->Uint32Value();
+  GLuint index = args[0]->Uint32Value();
   GLfloat x = args[1]->NumberValue();
   GLfloat y = args[2]->NumberValue();
 
-  glVertexAttrib2f(indx, x, y);
+  glVertexAttrib2f(index, x, y);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlVertexAttrib2fv(const Arguments& args) {
   HandleScope scope;
 
-  GLuint indx = args[0]->Uint32Value();
+  GLuint index = args[0]->Uint32Value();
 
   // buffer
-  Local<Object> obj_values = args[1]->ToObject();
-  if (obj_values->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
+  Local<Object> obj_v = args[1]->ToObject();
+  if (obj_v->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
     ThrowException(Exception::TypeError(String::New("glVertexAttrib2fv expects a Buffer for argument 1")));
     return scope.Close(Undefined());
   }
-  const GLfloat* values = static_cast<const GLfloat*>(obj_values->GetIndexedPropertiesExternalArrayData());
+  const GLfloat* v = static_cast<const GLfloat*>(obj_v->GetIndexedPropertiesExternalArrayData());
 
 
-  glVertexAttrib2fv(indx, values);
+  glVertexAttrib2fv(index, v);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlVertexAttrib3f(const Arguments& args) {
   HandleScope scope;
 
-  GLuint indx = args[0]->Uint32Value();
+  GLuint index = args[0]->Uint32Value();
   GLfloat x = args[1]->NumberValue();
   GLfloat y = args[2]->NumberValue();
   GLfloat z = args[3]->NumberValue();
 
-  glVertexAttrib3f(indx, x, y, z);
+  glVertexAttrib3f(index, x, y, z);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlVertexAttrib3fv(const Arguments& args) {
   HandleScope scope;
 
-  GLuint indx = args[0]->Uint32Value();
+  GLuint index = args[0]->Uint32Value();
 
   // buffer
-  Local<Object> obj_values = args[1]->ToObject();
-  if (obj_values->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
+  Local<Object> obj_v = args[1]->ToObject();
+  if (obj_v->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
     ThrowException(Exception::TypeError(String::New("glVertexAttrib3fv expects a Buffer for argument 1")));
     return scope.Close(Undefined());
   }
-  const GLfloat* values = static_cast<const GLfloat*>(obj_values->GetIndexedPropertiesExternalArrayData());
+  const GLfloat* v = static_cast<const GLfloat*>(obj_v->GetIndexedPropertiesExternalArrayData());
 
 
-  glVertexAttrib3fv(indx, values);
+  glVertexAttrib3fv(index, v);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlVertexAttrib4f(const Arguments& args) {
   HandleScope scope;
 
-  GLuint indx = args[0]->Uint32Value();
+  GLuint index = args[0]->Uint32Value();
   GLfloat x = args[1]->NumberValue();
   GLfloat y = args[2]->NumberValue();
   GLfloat z = args[3]->NumberValue();
   GLfloat w = args[4]->NumberValue();
 
-  glVertexAttrib4f(indx, x, y, z, w);
+  glVertexAttrib4f(index, x, y, z, w);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlVertexAttrib4fv(const Arguments& args) {
   HandleScope scope;
 
-  GLuint indx = args[0]->Uint32Value();
+  GLuint index = args[0]->Uint32Value();
 
   // buffer
-  Local<Object> obj_values = args[1]->ToObject();
-  if (obj_values->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
+  Local<Object> obj_v = args[1]->ToObject();
+  if (obj_v->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
     ThrowException(Exception::TypeError(String::New("glVertexAttrib4fv expects a Buffer for argument 1")));
     return scope.Close(Undefined());
   }
-  const GLfloat* values = static_cast<const GLfloat*>(obj_values->GetIndexedPropertiesExternalArrayData());
+  const GLfloat* v = static_cast<const GLfloat*>(obj_v->GetIndexedPropertiesExternalArrayData());
 
 
-  glVertexAttrib4fv(indx, values);
+  glVertexAttrib4fv(index, v);
   return scope.Close(Undefined());
 }
 
 Handle<Value> GlVertexAttribPointer(const Arguments& args) {
   HandleScope scope;
 
-  GLuint indx = args[0]->Uint32Value();
+  GLuint index = args[0]->Uint32Value();
   GLint size = args[1]->Int32Value();
   GLenum type = args[2]->Int32Value();
   GLboolean normalized = (GLboolean)args[3]->Int32Value();
   GLsizei stride = args[4]->Int32Value();
 
   // buffer
-  Local<Object> obj_ptr = args[5]->ToObject();
-  if (obj_ptr->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
+  Local<Object> obj_pointer = args[5]->ToObject();
+  if (obj_pointer->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
     ThrowException(Exception::TypeError(String::New("glVertexAttribPointer expects a Buffer for argument 5")));
     return scope.Close(Undefined());
   }
-  const GLvoid* ptr = static_cast<const GLvoid*>(obj_ptr->GetIndexedPropertiesExternalArrayData());
+  const void* pointer = static_cast<const void*>(obj_pointer->GetIndexedPropertiesExternalArrayData());
 
 
-  glVertexAttribPointer(indx, size, type, normalized, stride, ptr);
+  glVertexAttribPointer(index, size, type, normalized, stride, pointer);
   return scope.Close(Undefined());
 }
 
@@ -1980,7 +1959,6 @@ void init(Handle<Object> target) {
   SetMethod(target, "glGetShaderInfoLog", GlGetShaderInfoLog);
   SetMethod(target, "glGetShaderPrecisionFormat", GlGetShaderPrecisionFormat);
   SetMethod(target, "glGetShaderSource", GlGetShaderSource);
-  SetMethod(target, "glGetString", GlGetString);
   SetMethod(target, "glGetTexParameterfv", GlGetTexParameterfv);
   SetMethod(target, "glGetTexParameteriv", GlGetTexParameteriv);
   SetMethod(target, "glGetUniformfv", GlGetUniformfv);

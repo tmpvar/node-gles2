@@ -32,7 +32,14 @@ get('http://www.khronos.org/registry/gles/api/GLES2/gl2.h', function(err, res, h
   init.push('');
   init.push('  // Methods')
   headerString.match(/GL_APICALL .+ GL_APIENTRY gl[^;]+/g).forEach(function(fn) {
-      var parts = fn.replace(/[\(\),]/g, '').replace(/ *GL_APIENTRY/g, '').replace(/GL_APICALL /g, '').split(' ');
+      var parts = fn.replace(/[\(\),]/g, '')
+                    .replace(/ *GL_APIENTRY/g, '')
+                    .replace(/GL_APICALL /g, '')
+                    .replace(/ \*/g, '* ')
+                    .replace(/\*(\w)/g, '* $1')
+                    .replace(/\* const/g, '*const')
+                    .split(' ');
+
       var signature = {};
 
       signature.returnType = parts.shift();
@@ -114,10 +121,14 @@ get('http://www.khronos.org/registry/gles/api/GLES2/gl2.h', function(err, res, h
           break;
 
           case 'const GLchar*':
+          case 'GLchar*':
+          case 'const char*':
             cc.push('  v8::String::Utf8Value string_' + name + '(args[' + i + ']);')
             cc.push('  ' + type + ' ' + name + ' = *string_' + name + ';');
           break;
 
+          case 'const void*':
+          case 'void*': // This is probably an outgoing buffer..
           case 'const GLvoid*':
           case 'const GLfloat*':
             cc.push('');
@@ -132,6 +143,7 @@ get('http://www.khronos.org/registry/gles/api/GLES2/gl2.h', function(err, res, h
           break;
 
 
+          case 'GLuint*':
           case 'const GLuint*':
           case 'const GLint*':
             if (signature.name !== 'glShaderSource') {
@@ -147,7 +159,7 @@ get('http://www.khronos.org/registry/gles/api/GLES2/gl2.h', function(err, res, h
             }
           break;
 
-          case 'const GLchar* const*':
+          case 'const GLchar*const*':
             var argKeys = Object.keys(signature.arguments)
 
             cc.push('');
