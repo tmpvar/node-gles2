@@ -1,8 +1,7 @@
-#define BUILDING_NODE_EXTENSION
 #ifndef _INCLUDE_ARCH_WRAPPER_
 #define _INCLUDE_ARCH_WRAPPER_
   #include <stdlib.h>
-  
+
   #define DEFINE_CONSTANT(target, name, constant)                            \
   (target)->Set(v8::String::NewSymbol(name),                         \
                 v8::Integer::New(constant),                               \
