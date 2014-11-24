@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "glfw3-window": "git://github.com/tmpvar/glfw3-window",
+    "node-glfw": "^0.3.1"
+  }
+}
