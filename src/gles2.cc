@@ -2,10 +2,16 @@
 #include <node_buffer.h>
 #include <v8.h>
 #include "arch_wrapper.h"
+// #include "GL/glew.h"
 
 using namespace v8;
 using namespace node;
 
+#define PRINT_ERR \
+  GLenum err = glGetError(); \
+  if (err) { \
+    printf("ERROR: %s\n", gluErrorString(err)); \
+  }
 
 Handle<Value> GlActiveTexture(const Arguments& args) {
   HandleScope scope;
@@ -45,6 +51,7 @@ Handle<Value> GlBindBuffer(const Arguments& args) {
   GLuint buffer = args[1]->Uint32Value();
 
   glBindBuffer(target, buffer);
+
   return scope.Close(Undefined());
 }
 
@@ -333,9 +340,43 @@ Handle<Value> GlCreateShader(const Arguments& args) {
   HandleScope scope;
 
   GLenum type = args[0]->Int32Value();
+  GLuint ret = 0;
 
-  GLuint ret = glCreateShader(type);
-  return scope.Close(Number::New(ret));
+  if (type == GL_VERTEX_SHADER) {
+    printf("VERTEX SHADER\n");
+    ret = glCreateShader(GL_VERTEX_SHADER);
+  } else if (type == GL_FRAGMENT_SHADER) {
+    printf("FRAGMENT SHADER\n");
+    ret = glCreateShader(GL_FRAGMENT_SHADER);
+  } else {
+    printf("UNKNOWN SHADER TYPE\n");
+  }
+
+  printf("shader id: %u\n", ret);
+  return scope.Close(Integer::New(ret));
+}
+
+Handle<Value> GlBindFragDataLocation(const Arguments& args) {
+  HandleScope scope;
+
+  GLuint program = args[0]->Int32Value();
+  GLuint index = args[1]->Int32Value();
+  String::Utf8Value string_name(args[6]);
+  const GLchar *name = *string_name;
+
+  glBindFragDataLocation(program, index, name);
+
+  return scope.Close(Undefined());
+}
+
+Handle<Value> GlBindVertexArray(const Arguments& args) {
+  HandleScope scope;
+
+  GLuint id = args[0]->Int32Value();
+
+  glBindVertexArray(id);
+
+  return scope.Close(Undefined());
 }
 
 Handle<Value> GlCullFace(const Arguments& args) {
@@ -539,6 +580,9 @@ Handle<Value> GlEnableVertexAttribArray(const Arguments& args) {
   GLuint index = args[0]->Uint32Value();
 
   glEnableVertexAttribArray(index);
+
+  PRINT_ERR
+
   return scope.Close(Undefined());
 }
 
@@ -598,17 +642,30 @@ Handle<Value> GlGenBuffers(const Arguments& args) {
   GLsizei n = args[0]->Int32Value();
 
   // list of Gluints
-  Handle<Array> array_buffers = Handle<Array>::Cast(args[1]);
-  int length_1 = array_buffers->Get(String::New("length"))->ToObject()->Uint32Value();
-  GLuint buffers[length_1];
-  for (int i=0; i<length_1; i++) {
-    buffers[i] = array_buffers->Get(i)->ToObject()->Uint32Value();
-  }
+  // Handle<Array> array_buffers = Handle<Array>::Cast(args[1]);
+  // int length_1 = array_buffers->Get(String::New("length"))->ToObject()->Uint32Value();
+  GLuint buffer;
+  // for (int i=0; i<length_1; i++) {
+  //   buffers[i] = array_buffers->Get(i)->ToObject()->Uint32Value();
+  // }
 
-
-  glGenBuffers(n, buffers);
-  return scope.Close(Undefined());
+  // TODO: this should handle more than 1
+  glGenBuffers(1, &buffer);
+  return scope.Close(Integer::New(buffer));
 }
+
+Handle<Value> GlGenVertexArrays(const Arguments& args) {
+  HandleScope scope;
+
+  uint32_t n = args[0]->Int32Value();
+
+  GLuint result[1];
+  glGenVertexArrays(1, result);
+
+  return scope.Close(Integer::New(result[0]));
+}
+
+
 
 Handle<Value> GlGenerateMipmap(const Arguments& args) {
   HandleScope scope;
@@ -871,6 +928,16 @@ Handle<Value> GlGetShaderiv(const Arguments& args) {
   return scope.Close(Number::New(params_base));
 }
 
+Handle<Value> GlGetString(const Arguments& args) {
+  HandleScope scope;
+
+  GLuint name = args[0]->Uint32Value();
+
+  const GLubyte *str = glGetString(name);
+
+  return scope.Close(String::New((const char *)str));
+}
+
 Handle<Value> GlGetShaderInfoLog(const Arguments& args) {
   HandleScope scope;
 
@@ -883,7 +950,7 @@ Handle<Value> GlGetShaderInfoLog(const Arguments& args) {
 
   glGetShaderInfoLog(shader, bufSize, length, infoLog);
 
-  return scope.Close(Number::New(length_base));
+  return scope.Close(String::New(infoLog));
 }
 
 Handle<Value> GlGetShaderPrecisionFormat(const Arguments& args) {
@@ -1228,11 +1295,10 @@ Handle<Value> GlShaderSource(const Arguments& args) {
 
   for (int i=0; i<length_2; i++) {
     String::AsciiValue string_2(array_string->Get(i));
+    int llength = string_2.length();
     const GLchar *char_2 = *string_2;
-    glShaderSource(shader, count, &char_2, NULL);
-
+    glShaderSource(shader, 1, &char_2, NULL);
   }
-
 
   return scope.Close(Undefined());
 }
@@ -1858,19 +1924,20 @@ Handle<Value> GlVertexAttribPointer(const Arguments& args) {
   GLuint index = args[0]->Uint32Value();
   GLint size = args[1]->Int32Value();
   GLenum type = args[2]->Int32Value();
-  GLboolean normalized = (GLboolean)args[3]->Int32Value();
+  GLboolean normalized = args[3]->Int32Value() == GL_TRUE;
   GLsizei stride = args[4]->Int32Value();
 
   // buffer
-  Local<Object> obj_pointer = args[5]->ToObject();
-  if (obj_pointer->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
-    ThrowException(Exception::TypeError(String::New("glVertexAttribPointer expects a Buffer for argument 5")));
-    return scope.Close(Undefined());
-  }
-  const void* pointer = static_cast<const void*>(obj_pointer->GetIndexedPropertiesExternalArrayData());
+  // Local<Object> obj_pointer = args[5]->ToObject();
+  // if (obj_pointer->GetIndexedPropertiesExternalArrayDataType() != kExternalFloatArray) {
+  //   ThrowException(Exception::TypeError(String::New("glVertexAttribPointer expects a Buffer for argument 5")));
+  //   return scope.Close(Undefined());
+  // }
+  // const void* pointer = static_cast<const void*>(obj_pointer->GetIndexedPropertiesExternalArrayData());
 
 
-  glVertexAttribPointer(index, size, type, normalized, stride, pointer);
+  glVertexAttribPointer(index, size, type, normalized, stride, (void *)0);
+
   return scope.Close(Undefined());
 }
 
@@ -1895,6 +1962,8 @@ void init(Handle<Object> target) {
   SetMethod(target, "glBindFramebuffer", GlBindFramebuffer);
   SetMethod(target, "glBindRenderbuffer", GlBindRenderbuffer);
   SetMethod(target, "glBindTexture", GlBindTexture);
+  SetMethod(target, "glBindFragDataLocation", GlBindFragDataLocation);
+  SetMethod(target, "glBindVertexArray", GlBindVertexArray);
   SetMethod(target, "glBlendColor", GlBlendColor);
   SetMethod(target, "glBlendEquation", GlBlendEquation);
   SetMethod(target, "glBlendEquationSeparate", GlBlendEquationSeparate);
@@ -1938,6 +2007,7 @@ void init(Handle<Object> target) {
   SetMethod(target, "glFramebufferTexture2D", GlFramebufferTexture2D);
   SetMethod(target, "glFrontFace", GlFrontFace);
   SetMethod(target, "glGenBuffers", GlGenBuffers);
+  SetMethod(target, "glGenVertexArrays", GlGenVertexArrays);
   SetMethod(target, "glGenerateMipmap", GlGenerateMipmap);
   SetMethod(target, "glGenFramebuffers", GlGenFramebuffers);
   SetMethod(target, "glGenRenderbuffers", GlGenRenderbuffers);
@@ -1956,6 +2026,7 @@ void init(Handle<Object> target) {
   SetMethod(target, "glGetProgramInfoLog", GlGetProgramInfoLog);
   SetMethod(target, "glGetRenderbufferParameteriv", GlGetRenderbufferParameteriv);
   SetMethod(target, "glGetShaderiv", GlGetShaderiv);
+  SetMethod(target, "glGetString", GlGetString);
   SetMethod(target, "glGetShaderInfoLog", GlGetShaderInfoLog);
   SetMethod(target, "glGetShaderPrecisionFormat", GlGetShaderPrecisionFormat);
   SetMethod(target, "glGetShaderSource", GlGetShaderSource);
