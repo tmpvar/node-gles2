@@ -2,7 +2,7 @@
   "name": "gles2",
   "version": "0.0.0",
   "description": "node bindings for opengl es2",
-  "main": "index.js",
+  "main": "gles2.js",
   "directories": {
     "test": "test"
   },
