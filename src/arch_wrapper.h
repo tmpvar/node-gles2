@@ -20,7 +20,8 @@
   #else
     #ifdef __APPLE__
       #include <OpenGL/OpenGL.h>
-      #include <OpenGL/gl.h>
+      #include <OpenGL/gl3.h>
+      #include <OpenGL/glu.h>
       #define glClearDepthf glClearDepth
       #define glDepthRangef glDepthRange
 
